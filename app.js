@@ -835,6 +835,126 @@
 
 
   /* ================= 지뢰찾기 (실제 플레이 + 최고기록) ================= */
+  /* ================= 블록 블래스트 ================= */
+  function blockblastApp() {
+    const SZ = 8, KEY = "phone-bb-best";
+    const COLORS = ["#ff5a5f", "#ffc93c", "#4cc9f0", "#7bd389", "#b388eb", "#ff9f43", "#5b8cff"];
+    const SHAPES = [
+      [[0,0]], [[0,0],[1,0]], [[0,0],[0,1]], [[0,0],[1,0],[2,0]], [[0,0],[0,1],[0,2]],
+      [[0,0],[1,0],[2,0],[3,0]], [[0,0],[0,1],[0,2],[0,3]], [[0,0],[1,0],[2,0],[3,0],[4,0]], [[0,0],[0,1],[0,2],[0,3],[0,4]],
+      [[0,0],[1,0],[0,1],[1,1]], [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]], [[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]],
+      [[0,0],[0,1],[0,2],[1,2]], [[1,0],[1,1],[1,2],[0,2]], [[0,0],[1,0],[0,1],[0,2]], [[0,0],[1,0],[1,1],[1,2]],
+      [[0,0],[1,0],[2,0],[1,1]], [[1,0],[0,1],[1,1],[2,1]], [[0,0],[1,0],[1,1],[2,1]], [[1,0],[2,0],[0,1],[1,1]],
+      [[0,0],[0,1],[1,1]], [[0,0],[1,0],[1,1]], [[1,0],[0,1],[1,1]], [[0,0],[1,0],[0,1]]
+    ];
+    const loadBest = () => { let v = (P.blockblast || {}).best || 0; try { v = Math.max(v, +(localStorage.getItem(KEY) || 0)); } catch (e) {} return v; };
+    let grid, tray, score, best = loadBest(), over;
+    const el = h(`<section class="screen bb" data-dark="1">
+      <div class="navbar"><button class="pill round" data-home>${ic.back}</button><b style="font-size:17px;color:#fff">Block Blast</b><span class="pill round" data-reset>↻</span></div>
+      <div class="bb-top"><div class="bb-best">👑 <b data-best>${best}</b></div><div class="bb-score" data-score>0</div></div>
+      <div class="bb-board" data-board>${Array.from({ length: SZ * SZ }, (_, i) => `<i data-i="${i}"></i>`).join("")}</div>
+      <div class="bb-tray" data-tray></div>
+      <div class="bb-over" data-over hidden><b>더 이상 놓을 곳이 없어요</b><span data-final></span><button data-reset>다시 하기</button></div>
+    </section>`);
+    const boardEl = el.querySelector("[data-board]"), trayEl = el.querySelector("[data-tray]"), cellsEl = [...boardEl.children];
+    const rnd = a => a[Math.floor(Math.random() * a.length)];
+    const newPiece = () => ({ s: rnd(SHAPES), c: rnd(COLORS) });
+    const dims = s => [Math.max(...s.map(q => q[0])) + 1, Math.max(...s.map(q => q[1])) + 1];
+    const fits = (s, x, y) => s.every(([dx, dy]) => { const X = x + dx, Y = y + dy; return X >= 0 && Y >= 0 && X < SZ && Y < SZ && !grid[Y * SZ + X]; });
+    const canPlace = s => { for (let y = 0; y < SZ; y++) for (let x = 0; x < SZ; x++) if (fits(s, x, y)) return true; return false; };
+    function paint() {
+      cellsEl.forEach((c, i) => { c.style.background = grid[i] || ""; c.className = grid[i] ? "on" : ""; });
+      el.querySelector("[data-score]").textContent = score;
+      el.querySelector("[data-best]").textContent = best;
+    }
+    function drawTray() {
+      trayEl.innerHTML = tray.map((pc, k) => {
+        if (!pc) return `<div class="bb-slot"></div>`;
+        const [w, hh] = dims(pc.s), ok = canPlace(pc.s);
+        return `<div class="bb-slot"><div class="bb-piece${ok ? "" : " no"}" data-k="${k}" style="width:${w * 20}px;height:${hh * 20}px">${pc.s.map(([x, y]) => `<i style="left:${x * 20}px;top:${y * 20}px;background:${pc.c}"></i>`).join("")}</div></div>`;
+      }).join("");
+    }
+    function reset() {
+      grid = Array(SZ * SZ).fill(null); score = 0; over = false;
+      tray = [newPiece(), newPiece(), newPiece()];
+      el.querySelector("[data-over]").hidden = true;
+      paint(); drawTray();
+    }
+    function checkOver() {
+      if (tray.some(pc => pc && canPlace(pc.s))) return;
+      over = true;
+      el.querySelector("[data-final]").textContent = `점수 ${score}`;
+      el.querySelector("[data-over]").hidden = false;
+    }
+    function place(k, x, y) {
+      const pc = tray[k];
+      pc.s.forEach(([dx, dy]) => { grid[(y + dy) * SZ + x + dx] = pc.c; });
+      score += pc.s.length;
+      const full = [];
+      for (let r = 0; r < SZ; r++) if ([...Array(SZ).keys()].every(c => grid[r * SZ + c])) for (let c = 0; c < SZ; c++) full.push(r * SZ + c);
+      let lines = 0;
+      for (let r = 0; r < SZ; r++) if ([...Array(SZ).keys()].every(c => grid[r * SZ + c])) lines++;
+      for (let c = 0; c < SZ; c++) if ([...Array(SZ).keys()].every(r => grid[r * SZ + c])) { lines++; for (let r = 0; r < SZ; r++) full.push(r * SZ + c); }
+      tray[k] = null;
+      if (tray.every(t => !t)) tray = [newPiece(), newPiece(), newPiece()];
+      paint();
+      if (lines) {
+        score += lines * 10 * lines;
+        new Set(full).forEach(i => cellsEl[i].classList.add("pop"));
+        setTimeout(() => { new Set(full).forEach(i => { grid[i] = null; }); paint(); drawTray(); checkOver(); }, 220);
+      } else { drawTray(); checkOver(); }
+      if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} }
+      el.querySelector("[data-score]").textContent = score;
+      el.querySelector("[data-best]").textContent = best;
+    }
+    /* 드래그: 손가락보다 조금 위에 블록이 떠서 따라옴 */
+    let drag = null;
+    const local = (cx, cy) => { const r = el.getBoundingClientRect(), k = el.offsetWidth / r.width; return [(cx - r.left) * k, (cy - r.top) * k]; };
+    const clearHint = () => cellsEl.forEach(c => c.classList.remove("hint", "bad"));
+    function target(cx, cy) {
+      const br = boardEl.getBoundingClientRect(), cell = br.width / SZ;
+      const [w, hh] = dims(drag.pc.s);
+      const left = cx - (w * cell) / 2, top = cy - drag.lift - hh * cell;
+      return [Math.round((left - br.left) / cell), Math.round((top - br.top) / cell), cell, br];
+    }
+    trayEl.addEventListener("pointerdown", e => {
+      const pe = e.target.closest(".bb-piece"); if (!pe || over) return;
+      const k = +pe.dataset.k, pc = tray[k]; if (!pc) return;
+      e.preventDefault();
+      const br = boardEl.getBoundingClientRect(), r = el.getBoundingClientRect(), sc = el.offsetWidth / r.width;
+      const cellPx = br.width / SZ * sc;
+      const [w, hh] = dims(pc.s);
+      const fl = h(`<div class="bb-float" style="width:${w * cellPx}px;height:${hh * cellPx}px">${pc.s.map(([x, y]) => `<i style="left:${x * cellPx}px;top:${y * cellPx}px;width:${cellPx - 3}px;height:${cellPx - 3}px;background:${pc.c}"></i>`).join("")}</div>`);
+      el.appendChild(fl); pe.style.opacity = ".2";
+      drag = { k, pc, fl, pe, lift: 40 / sc, w: w * cellPx, h: hh * cellPx };
+      move(e); trayEl.setPointerCapture?.(e.pointerId);
+    });
+    function move(e) {
+      if (!drag) return;
+      const [lx, ly] = local(e.clientX, e.clientY);
+      const sc = el.offsetWidth / el.getBoundingClientRect().width;
+      drag.fl.style.left = lx - drag.w / 2 + "px"; drag.fl.style.top = ly - drag.lift * sc - drag.h + "px";
+      clearHint();
+      const [x, y] = target(e.clientX, e.clientY);
+      drag.pos = fits(drag.pc.s, x, y) ? [x, y] : null;
+      if (drag.pos) drag.pc.s.forEach(([dx, dy]) => cellsEl[(y + dy) * SZ + x + dx].classList.add("hint"));
+    }
+    trayEl.addEventListener("pointermove", move);
+    const end = () => {
+      if (!drag) return;
+      clearHint(); drag.fl.remove(); drag.pe.style.opacity = "";
+      const d = drag; drag = null;
+      if (d.pos) place(d.k, d.pos[0], d.pos[1]);
+    };
+    trayEl.addEventListener("pointerup", end); trayEl.addEventListener("pointercancel", end);
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-home]")) { goHome(); return; }
+      if (e.target.closest("[data-reset]")) reset();
+    });
+    reset();
+    return el;
+  }
+
   function minesApp() {
     const M = P.minesweeper || {};
     const W = M.cols || 9, H = M.rows || 9, N = M.mines || 10;
@@ -931,7 +1051,7 @@
     return el;
   }
 
-  const OPEN = { mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
+  const OPEN = { blockblast: blockblastApp, mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
 
 
   /* ================= 흐르는 시계 · 캘린더 알림 ================= */
