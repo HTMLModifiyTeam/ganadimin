@@ -853,11 +853,11 @@
     };
     const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(id[0].toUpperCase())}</span>`;
     const story = s => `<div class="ig-story${s.seen ? " seen" : ""}"><div class="ring">${s.me ? avatar(P.insta.me || "me", true) + '<b class="add">+</b>' : avatar(s.id, true)}</div><small>${esc(s.me ? "내 스토리" : s.id)}</small></div>`;
-    const post = (q, i) => `<article class="ig-post">
+    const post = (q, i, mine) => `<article class="ig-post">
       <header>${avatar(q.id)}<div><b>${esc(q.id)}</b>${q.place ? `<small>${esc(q.place)}</small>` : ""}</div><span class="mo">${II.more}</span></header>
       <div class="ig-img" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}</div>
-      <div class="ig-act"><button data-like="${i}">${II.heart}</button>${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
-      <div class="ig-txt"><b data-likes="${i}">좋아요 ${q.likes.toLocaleString()}개</b>
+      <div class="ig-act">${mine ? II.heart : `<button data-like="${i}">${II.heart}</button>`}${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
+      <div class="ig-txt"><b ${mine ? "" : `data-likes="${i}"`}>좋아요 ${q.likes.toLocaleString()}개</b>
         <p><b>${esc(q.id)}</b> ${esc(q.caption)}</p>
         ${q.comments ? `<span class="c">댓글 ${q.comments}개 모두 보기</span>` : ""}
         <span class="t">${esc(q.when)}</span></div>
@@ -869,11 +869,40 @@
         ${(G.posts || []).map(post).join("")}
         <div style="height:30px"></div>
       </div>
-      <nav class="ig-tab">${II.home}${II.search}${II.plus}${II.reels}${avatar(G.me || "me")}</nav>
+      <nav class="ig-tab">${II.home}${II.search}${II.plus}${II.reels}<button data-profile>${avatar(G.me || "me")}</button></nav>
     </section>`);
+    function profileView() {
+      const M = G.profile || {}, list = M.posts || [];
+      const v = h(`<section class="screen ig">
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname">${esc(G.me || "")}</span><span class="ig-ti">${II.plus}${II.more}</span></div>
+        <div class="scroll">
+          <div class="ig-prof"><div class="ig-pav">${avatar(G.me || "me", true)}</div>
+            <div class="ig-stats"><div><b>${list.length}</b><small>게시물</small></div><div><b>${esc(M.followers || "0")}</b><small>팔로워</small></div><div><b>${esc(M.following || "0")}</b><small>팔로잉</small></div></div></div>
+          <div class="ig-bio"><b>${esc(M.name || "")}</b><p>${esc(M.bio || "")}</p></div>
+          <div class="ig-btns"><span>프로필 편집</span><span>프로필 공유</span></div>
+          <div class="ig-gtabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17M14.5 3.5v17"/></svg></span><span>${II.reels}</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1-3 3.2-4.5 5.5-4.5s4.5 1.5 5.5 4.5"/></svg></span></div>
+          <div class="ig-grid">${list.map((q, i) => `<button data-mine="${i}" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}</button>`).join("")}</div>
+          <div style="height:30px"></div>
+        </div>
+        <nav class="ig-tab"><button data-back>${II.home}</button>${II.search}${II.plus}${II.reels}<span class="me-on">${avatar(G.me || "me")}</span></nav>
+      </section>`);
+      v.addEventListener("click", e => {
+        if (e.target.closest("[data-back]")) { back(); return; }
+        const t = e.target.closest("[data-mine]"); if (!t) return;
+        const i = +t.dataset.mine;
+        const pv = h(`<section class="screen ig">
+          <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname" style="flex:1;text-align:center;margin-right:40px">게시물</span></div>
+          <div class="scroll">${list.slice(i).map((q, k) => post({ ...q, id: G.me }, i + k, true)).join("")}<div style="height:30px"></div></div>
+        </section>`);
+        pv.querySelector("[data-back]").onclick = back;
+        show(pv, "push");
+      });
+      return v;
+    }
     el.querySelector(".ig-tab svg").classList.add("on");
     el.addEventListener("click", e => {
       if (e.target.closest("[data-home]")) { goHome(); return; }
+      if (e.target.closest("[data-profile]")) { show(profileView(), "push"); return; }
       const b = e.target.closest("[data-like]"); if (!b) return;
       const i = +b.dataset.like, q = G.posts[i]; q.liked = !q.liked;
       b.classList.toggle("on", q.liked);

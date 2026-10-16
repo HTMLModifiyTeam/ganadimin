@@ -629,6 +629,22 @@ window.PHONE = {
      img에 "img/파일.jpg"를 넣으면 실제 사진, 비우면 bg 색 + emoji 로 표시 */
   insta: {
     me: "minjae_k",
+    /* 오른쪽 아래 프로필을 누르면 보이는 민재 피드 (위에서부터 최신순) */
+    profile: {
+      name: "강민재", followers: "1,284", following: "312",
+      bio: "변호사 👨‍⚖️ | 🏃‍♂️ 러닝 | 맛집 탐방 중 🍚",
+      posts: [
+        { bg: "linear-gradient(160deg,#ffd194,#d1913c)", emoji: "🥩", place: "대박집", likes: 128, comments: 14, when: "2일 전", caption: "금요일엔 역시 대박집 회식 🥩 사장님 수육 최고!! #회식 #수육맛집" },
+        { bg: "linear-gradient(180deg,#141e30,#243b55)", emoji: "🎆", place: "여의도 한강공원", likes: 203, comments: 21, when: "2주 전", caption: "불꽃축제 다녀옴 🎆 옆자리는 비밀 🤫" },
+        { bg: "linear-gradient(160deg,#cfd9df,#e2ebf0)", emoji: "☕️", place: "서울중앙지방법원", likes: 96, comments: 5, when: "3주 전", caption: "재판 전 커피 수혈 ☕️ 오늘도 화이팅!" },
+        { bg: "linear-gradient(180deg,#ff9a8b,#ff6a88 50%,#2b2d5c)", emoji: "🏃‍♂️", place: "반포한강공원", likes: 87, comments: 6, when: "1개월 전", caption: "오운완 7km 🔥 언젠가 마라톤 나간다!! #러닝" },
+        { bg: "linear-gradient(160deg,#2a2f6e,#3a3f8f)", emoji: "🧩", likes: 74, comments: 18, when: "1개월 전", caption: "블록블래스트 3120점 ㅋㅋ 아무도 못 깸 😎" },
+        { bg: "linear-gradient(180deg,#a1c4fd,#c2e9fb 55%,#e6d3a3)", emoji: "🌊", place: "강릉", likes: 156, comments: 12, when: "2개월 전", caption: "바다 보고 왔다 🌊 다음엔 같이 와야지" },
+        { bg: "linear-gradient(160deg,#f6d365,#fda085)", emoji: "🍲", place: "교대", likes: 65, comments: 4, when: "3개월 전", caption: "법원 앞 국밥집 찐맛집 🍲 #교대맛집" },
+        { bg: "linear-gradient(160deg,#fbc2eb,#a6c1ee)", emoji: "🌸", place: "석촌호수", likes: 142, comments: 9, when: "6개월 전", caption: "벚꽃 엔딩 🌸 #석촌호수" },
+        { bg: "linear-gradient(160deg,#e0eafc,#cfdef3)", emoji: "👨‍⚖️", likes: 312, comments: 57, when: "1년 전", caption: "드디어 변호사 등록!! 앞으로 잘 부탁드립니다 🙇‍♂️" }
+      ]
+    },
     stories: [
       { id: "cafe.hopper_" }, { id: "hanriver_runner" }, { id: "mung.daily" }, { id: "seoul_foodie.log" }, { id: "jjj.travel", seen: true }, { id: "yoonbakes", seen: true }
     ],

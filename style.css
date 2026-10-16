@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162302") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162306") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -739,3 +739,23 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ig-tab{display:flex;justify-content:space-around;align-items:center;height:56px;border-top:1px solid #efefef;padding-bottom:20px;flex:none;background:#fff}
 .ig-tab .ig-av{width:26px;height:26px;font-size:11px}
 .ig-tab svg.on{stroke-width:2.6}
+.ig-tab button{display:flex}
+.ig-tab .me-on .ig-av{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #000}
+.ig-uname{font-size:20px;font-weight:700;flex:1}
+.ig-prof{display:flex;align-items:center;gap:22px;padding:8px 16px 10px}
+.ig-pav .ig-av.big{width:84px;height:84px;font-size:32px}
+.ig-stats{flex:1;display:flex;justify-content:space-around;text-align:center}
+.ig-stats div{display:flex;flex-direction:column}
+.ig-stats b{font-size:17px}
+.ig-stats small{font-size:13px}
+.ig-bio{padding:0 16px 10px;font-size:14px;line-height:1.45}
+.ig-bio p{margin:2px 0 0;white-space:pre-wrap}
+.ig-btns{display:flex;gap:6px;padding:0 16px 14px}
+.ig-btns span{flex:1;text-align:center;background:#efefef;border-radius:8px;padding:8px 0;font-size:14px;font-weight:600}
+.ig-gtabs{display:flex;border-bottom:1px solid #efefef}
+.ig-gtabs span{flex:1;display:flex;justify-content:center;padding:10px 0;color:#8e8e8e}
+.ig-gtabs span.on{color:#000;box-shadow:inset 0 -1.5px 0 #000}
+.ig-gtabs svg{width:24px;height:24px}
+.ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.ig-grid button{aspect-ratio:3/4;display:flex;align-items:center;justify-content:center}
+.ig-grid span{font-size:44px}
