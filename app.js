@@ -1185,14 +1185,7 @@
   const PASS = String(P.passcode || "");
   const PASS_LEN = PASS.length || 4;
   const keys = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"]];
-  /* 잠금화면 시계: 두 줄 테두리 글씨 (굵은 테두리에서 가운데를 마스크로 파냄) */
-  function lockTime(t) {
-    const txt = (extra) => `<text x="200" y="128" text-anchor="middle" ${extra} data-ltime>${t}</text>`;
-    return `<svg class="lk-time" viewBox="0 0 400 150" aria-label="${t}">
-      <defs><mask id="lkMask" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="150"><rect width="400" height="150" fill="#fff"/>${txt('fill="#000" stroke="#000" stroke-width="2.4"')}</mask></defs>
-      ${txt('fill="none" stroke="currentColor" stroke-width="8.5" stroke-linejoin="round" mask="url(#lkMask)"')}
-    </svg>`;
-  }
+  function lockTime(t) { return `<div class="lk-time" data-ltime>${t}</div>`; }
   /* 잠금화면 위젯: 디데이 · 음악 · 알람 */
   function lockWidgets() {
     const W = P.lockWidgets; if (!W) return "";
