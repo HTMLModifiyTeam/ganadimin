@@ -130,7 +130,7 @@ window.PHONE = {
      비워두면("") 기본 아이콘. 캘린더·시계를 이미지로 바꾸면 날짜·시곗바늘은 움직이지 않아요. */
   icons: {
     calendar: "", photos: "", camera: "", clock: "",
-    notes: "", mail: "", weather: "",
+    notes: "", mail: "", weather: "", insta: "", karrot: "", blockblast: "", mines: "",
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   badges: { phone: 8, mail: 2, messages: 3, kakao: 12 },
