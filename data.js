@@ -27,6 +27,8 @@ window.PHONE = {
   passcode: "",                // 잠금화면 암호. 비워두면 아무 숫자 4자리나 눌러도 열려요 (예: "1201")
   /* 잠금 해제 후 휴대폰 속 시간이 afterMinutes분 흐르면 걸려오는 전화 (받아도 소리는 나지 않아요) */
   incomingCall: null,
+  /* 키패드에서 아무 숫자나 누르면 한 자리씩 입력되는 번호 */
+  keypadNumber: "010-0617-1201",
 
 
   /* 통화 기록에서 눌러 거는 전화의 대화 (who: "me" = 차주한, 없으면 상대방)
@@ -56,6 +58,15 @@ window.PHONE = {
         { who: "me", text: "헉… 넵! 저 달려갈게요!!" },
         { text: "과속하지 말고—", cut: true }
       ] },
+    "010-0617-1201": { answer: 1, answerAfter: 5000, lines: [
+      { who: "me", text: "누구세요?" },
+      { text: "……", ms: 3000 },
+      { who: "me", text: "…여보세요?" },
+      { text: "…잠시, 끊지 마. 잠시만." },
+      { text: "…강민재. 진짜 강민재야?" },
+      { text: "…그곳의 차검사님은…", ms: 3200 },
+      { text: "나도—", cut: true, noise: true, cutAfter: 700, endLabel: "연결 끊김" }
+    ] },
     "새벽경제 김도윤 기자": { lines: [
       { text: "강민재 변호사님 맞으시죠? 새벽경제 김도윤입니다." },
       { text: "인터뷰 요청 좀 드리려고요~" },
@@ -229,9 +240,14 @@ window.PHONE = {
       { name: "010-0000-8812", preview: "[Web발신] 고객님 택배가 주소불명으로 보관 중입니다. 주소 수정 ▶ bit.ly/xxxx", when: "목요일", unread: true, sms: true },
       { name: "한진택배", preview: "[한진택배] 상품이 문 앞에 배송 완료되었습니다.", when: "수요일", sms: true },
       { name: "070-0000-2290", preview: "(광고) 수익률 300%! 무료 주식 리딩방 입장 ▶", when: "화요일", sms: true },
-      { name: "롯데택배", preview: "[롯데택배] 배송 완료되었습니다. (문 앞)", when: "2026. 10. 10.", sms: true }
+      { name: "롯데택배", preview: "[롯데택배] 배송 완료되었습니다. (문 앞)", when: "2026. 10. 10.", sms: true },
+      { name: "010-0617-1201", preview: ".", when: "2026. 6. 17.", sms: true }
     ],
     chats: {
+      "010-0617-1201": [
+        { date: "6월 17일 (수) 오전 3:33" },
+        { text: "." }
+      ],
       "새벽경제 김도윤 기자": [
         { date: "어제 오후 7:12" },
         { text: "안녕하세요, 강민재 변호사님 맞으시죠? 새벽경제 김도윤 기자입니다." },

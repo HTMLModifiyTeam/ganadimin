@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170037") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170047") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -849,3 +849,20 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lp-close{margin-top:auto;color:#fff;opacity:.7;font-size:15px}
 .ig-dmt-wrap{display:flex;align-items:center;gap:4px}
 .ig-viewprof{margin-top:10px;padding:7px 14px;border-radius:8px;background:#efefef;font-size:13.5px;font-weight:600}
+
+/* 키패드 (라이트) */
+.kp{display:flex;flex-direction:column}
+.kp-num{flex:1;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 26px;min-height:120px}
+.kp-num span{font-size:38px;font-weight:400;letter-spacing:.5px;color:#000;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kp-grid{display:grid;grid-template-columns:repeat(3,calc(78px*var(--s)));gap:calc(16px*var(--s)) calc(26px*var(--s));justify-content:center}
+.kp-grid button{width:calc(78px*var(--s));height:calc(78px*var(--s));border-radius:50%;background:#e5e5ea;color:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.kp-grid button:active{background:#c7c7cc}
+.kp-grid b{font-size:calc(34px*var(--s));font-weight:400}
+.kp-grid small{font-size:calc(10px*var(--s));font-weight:700;letter-spacing:2px;margin-top:2px}
+.kp-row{display:grid;grid-template-columns:repeat(3,calc(78px*var(--s)));gap:0 calc(26px*var(--s));justify-content:center;align-items:center;margin:calc(16px*var(--s)) 0 calc(22px*var(--s))}
+.kp-call{width:calc(78px*var(--s));height:calc(78px*var(--s));border-radius:50%;background:#34c759;display:flex;align-items:center;justify-content:center}
+.kp-call svg{width:34px;height:34px}
+.kp-del{font-size:26px;color:#8e8e93}
+.kp-del[hidden]{visibility:hidden;display:block}
+.callui.glitch{animation:glitch .12s steps(2) infinite}
+@keyframes glitch{0%{filter:none;transform:translate(0)}50%{filter:contrast(1.6) hue-rotate(40deg) saturate(.4);transform:translate(2px,-1px)}100%{filter:invert(.12);transform:translate(-2px,1px)}}

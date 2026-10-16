@@ -207,12 +207,58 @@
         <div><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21l1.5-7L2 9.3l7-.8z"/></svg>즐겨찾기</div>
         <div class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6v6l-3 2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>최근 통화</div>
         <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="9.5" r="3.5" fill="#fff"/><path d="M5.5 18.5c1.5-3 4-4 6.5-4s5 1 6.5 4" fill="#fff"/></svg>연락처</div>
-        <div><svg viewBox="0 0 24 24">${[4, 12, 20].flatMap(y => [5, 12, 19].map(x => `<circle cx="${x}" cy="${y}" r="2.6"/>`)).join("")}</svg>키패드</div>
+        <div data-keypad><svg viewBox="0 0 24 24">${[4, 12, 20].flatMap(y => [5, 12, 19].map(x => `<circle cx="${x}" cy="${y}" r="2.6"/>`)).join("")}</svg>키패드</div>
         <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
       </nav>
     </section>`);
-    el.addEventListener("click", e => { const r = e.target.closest("[data-dial]"); if (r && !e.target.closest(".ibtn")) outgoingCall(r.dataset.dial); });
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-keypad]")) { show(keypadView(), "push"); return; }
+      const r = e.target.closest("[data-dial]"); if (r && !e.target.closest(".ibtn")) outgoingCall(r.dataset.dial);
+    });
     return el;
+  }
+  /* 키패드: 아무 숫자를 눌러도 정해진 번호(P.keypadNumber)가 한 자리씩 입력됨 */
+  function keypadView() {
+    const target = String(P.keypadNumber || ""), digits = target.replace(/\D/g, "");
+    let n = 0;
+    const fmtNum = k => { let out = "", c = 0; for (const ch of target) { if (/\d/.test(ch)) { if (c >= k) break; c++; out += ch; } else if (c < k) out += ch; } return out.replace(/-$/, ""); };
+    const keys = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]];
+    const el = h(`<section class="screen white kp">
+      <div class="kp-num"><span data-num></span></div>
+      <div class="kp-grid">${keys.map(([k, s]) => `<button data-kk="${k}"><b>${k}</b>${s ? `<small>${s}</small>` : ""}</button>`).join("")}</div>
+      <div class="kp-row"><span></span><button class="kp-call" data-kcall><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="#fff"/></svg></button><button class="kp-del" data-kdel hidden>⌫</button></div>
+      <nav class="tabbar">
+        <div><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.6 5.7 21l1.5-7L2 9.3l7-.8z"/></svg>즐겨찾기</div>
+        <div data-recent><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6v6l-3 2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>최근 통화</div>
+        <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="9.5" r="3.5" fill="#fff"/><path d="M5.5 18.5c1.5-3 4-4 6.5-4s5 1 6.5 4" fill="#fff"/></svg>연락처</div>
+        <div class="on"><svg viewBox="0 0 24 24">${[4, 12, 20].flatMap(y => [5, 12, 19].map(x => `<circle cx="${x}" cy="${y}" r="2.6"/>`)).join("")}</svg>키패드</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
+      </nav>
+    </section>`);
+    const numEl = el.querySelector("[data-num]"), del = el.querySelector("[data-kdel]");
+    const draw = () => { numEl.textContent = fmtNum(n); del.hidden = n === 0; };
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-recent]")) { back(); return; }
+      if (e.target.closest("[data-kk]")) { if (n < digits.length) { n++; draw(); try { keyTone(); } catch (x) {} } return; }
+      if (e.target.closest("[data-kdel]")) { if (n) { n--; draw(); } return; }
+      if (e.target.closest("[data-kcall]") && n === digits.length && n) outgoingCall(target);
+    });
+    draw();
+    return el;
+  }
+  function keyTone() {
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = audioCtx.currentTime;
+    o.frequency.value = 1209; o.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.0001, t + .12); o.start(t); o.stop(t + .13);
+  }
+  /* 지직거리는 잡음 (통화가 강제로 끊길 때) */
+  function noiseBurst(sec = 1.2) {
+    if (!audioCtx) return;
+    const len = audioCtx.sampleRate * sec, buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (Math.random() < .3 ? 1 : .35);
+    const s = audioCtx.createBufferSource(), g = audioCtx.createGain(); s.buffer = buf; s.connect(g); g.connect(audioCtx.destination);
+    g.gain.setValueAtTime(.12, audioCtx.currentTime); g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + sec); s.start();
   }
 
   /* ================= 크롬 ================= */
@@ -318,11 +364,12 @@
       return `<div class="bub ${side}${sms ? " sms" : ""}">${esc(m.text)}</div>`;
     }).join("");
     const el = h(`<section class="screen white">
-      <div class="chat-head"><button class="pill round" data-back>${ic.back}</button><div class="who">${av(name)}<b>${esc(name)} ›</b></div><span class="pill round">${ic.video}</span></div>
+      <div class="chat-head"><button class="pill round" data-back>${ic.back}</button><div class="who" ${(P.callScripts || {})[name] ? "data-callme" : ""}>${av(name)}<b>${esc(name)} ›</b></div>${(P.callScripts || {})[name] ? `<button class="pill round" data-callme><svg viewBox="0 0 24 24" width="20" height="20"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg></button>` : `<span class="pill round">${ic.video}</span>`}</div>
       <div class="scroll" data-autobottom><div class="imsg">${body}</div></div>
       <div class="composer${sms ? " is-sms" : ""}"><span class="plus">+</span><label class="field"><input data-input enterkeyhint="send" autocomplete="off" placeholder="${sms ? "문자 메시지" : "iMessage"}"><button class="send" data-send aria-label="보내기"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></label></div>
     </section>`);
     el.querySelector("[data-back]").onclick = back;
+    el.querySelectorAll("[data-callme]").forEach(b => { b.style.cursor = "pointer"; b.onclick = () => outgoingCall(name); });
     wireComposer(el, text => {
       msgs.push({ me: true, text });
       el.querySelector(".imsg").insertAdjacentHTML("beforeend", `<div class="bub me${sms ? " sms" : ""} sent">${esc(text)}</div>`);
@@ -1397,7 +1444,8 @@
           lineEl.classList.toggle("me", l.who === "me");
           lineEl.classList.add("show");
         }, at));
-        timers.push(setTimeout(() => onEnd(true), at + (l.cutAfter || 1000)));
+        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); callEl?.classList.add("glitch"); }, at + 500));
+        timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 1300 : 0)));
         return;
       }
       timers.push(setTimeout(() => {
@@ -1455,7 +1503,7 @@
     // 처음 몇 번은 상대가 바로 끊음 (rejectFirst: [ms, ms, ...])
     const tries = (callTries[name] = (callTries[name] || 0) + 1), rej = script.rejectFirst || [];
     if (tries <= rej.length) { timers.push(setTimeout(() => { clearInterval(ringbackTimer); finish("통화 종료"); }, rej[tries - 1])); return; }
-    const waitMs = answered ? 3000 + Math.random() * 3000 : 9000;
+    const waitMs = answered ? (script.answerAfter ?? 3000 + Math.random() * 3000) : 9000;
     timers.push(setTimeout(() => {
       clearInterval(ringbackTimer);
       if (!answered) { finish("응답 없음"); return; }
@@ -1463,7 +1511,7 @@
       const t0 = Date.now();
       const draw = () => { const sec = Math.floor((Date.now() - t0) / 1000); tEl.textContent = `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
       draw(); callTimer = setInterval(draw, 1000);
-      runLines((tries - rej.length >= 2 && script.again) || script.lines || [], lineEl, timers, { start: script.lineStart, hangUp: script.hangUpAfter, name }, cut => finish("통화 종료", cut));
+      runLines((tries - rej.length >= 2 && script.again) || script.lines || [], lineEl, timers, { start: script.lineStart, hangUp: script.hangUpAfter, name }, (cut, lab) => finish(lab || "통화 종료", cut));
     }, waitMs));
   }
   function logOutgoing(name) {
