@@ -452,7 +452,16 @@
       let SC = (P.kakao.scripted || {})[name];
       if (SC && SC.once && SC.used) SC = null;
       if (SC) SC.used = true;
-      (SC ? SC.send : [typed]).forEach(text => {
+      // 트리거 단어를 한참 안 쓰면 정해진 문장이 대신 전송됨
+      let sendText = typed;
+      const NG = !SC && (P.kakao.nudge || {})[name];
+      if (NG) {
+        const has = t => (NG.words || []).some(w => t.replace(/\s+/g, "").includes(w));
+        if (NG.idx != null) { sendText = NG.lines[NG.idx++]; if (NG.idx >= NG.lines.length) { NG.idx = null; NG.miss = 0; } }
+        else if ((NG.miss || 0) >= NG.after) { NG.idx = 0; sendText = NG.lines[NG.idx++]; if (NG.idx >= NG.lines.length) { NG.idx = null; NG.miss = 0; } }
+        else NG.miss = has(typed) ? 0 : (NG.miss || 0) + 1;
+      }
+      (SC ? SC.send : [sendText]).forEach(text => {
       const todayLabel = `${TODAY.getFullYear()}년 ${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 ${WD[TODAY.getDay()]}요일`;
       const lastDate = [...msgs].reverse().find(m => m.date);
       const needDate = !lastDate || lastDate.date !== todayLabel;
@@ -465,7 +474,7 @@
       Object.assign(c, { preview: text, when: P.time, unread: 0 }); kTop(c);
       if (kakaoList && kakaoList.el.isConnected) { const list = kakaoList.el.querySelector("[data-list]"); list.querySelector(`[data-room="${CSS.escape(name)}"]`)?.remove(); kPrepend(list, h(kakaoList.row(c)), c); }
       });
-      const K = P.kakao, text = typed;
+      const K = P.kakao, text = sendText;
       // 정해진 대화: 무엇을 보내도 위 문장이 전송되고, 답장은 목록 중 하나가 랜덤
       if (SC) {
         setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
