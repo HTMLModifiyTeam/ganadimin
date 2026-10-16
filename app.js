@@ -1161,7 +1161,7 @@
     document.querySelectorAll(".ic-m").forEach(n => n.setAttribute("transform", `rotate(${ma} 30 30)`));
     document.querySelectorAll(".ic-sec").forEach(n => n.setAttribute("transform", `rotate(${sa} 30 30)`));
     // 오늘 일정 중 alert: true 인 것이 시작 시각이 되면 알림
-    if (lockEl) lockEl.querySelector("[data-ltime]").textContent = (() => { const [a, b] = P.time.split(":"); return `${+a > 12 ? +a - 12 : +a}:${b}`; })();
+    if (lockEl) { const [a, b] = P.time.split(":"), tt = `${+a > 12 ? +a - 12 : +a}:${b}`; lockEl.querySelectorAll("[data-ltime]").forEach(n => { if (n.textContent !== tt) n.textContent = tt; }); }
     if (!layer.classList.contains("open") || locked) return;
     const C = P.incomingCall;
     if (C && C.from && !callFired && !callEl && clockStart && t - START_SEC >= (C.afterMinutes ?? 5) * 60) { callFired = true; incomingCall(); }
@@ -1185,6 +1185,30 @@
   const PASS = String(P.passcode || "");
   const PASS_LEN = PASS.length || 4;
   const keys = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"]];
+  /* 잠금화면 시계: 두 줄 테두리 글씨 (굵은 테두리에서 가운데를 마스크로 파냄) */
+  function lockTime(t) {
+    const txt = (extra) => `<text x="200" y="128" text-anchor="middle" ${extra} data-ltime>${t}</text>`;
+    return `<svg class="lk-time" viewBox="0 0 400 150" aria-label="${t}">
+      <defs><mask id="lkMask" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="150"><rect width="400" height="150" fill="#fff"/>${txt('fill="#000" stroke="#000" stroke-width="2.4"')}</mask></defs>
+      ${txt('fill="none" stroke="currentColor" stroke-width="8.5" stroke-linejoin="round" mask="url(#lkMask)"')}
+    </svg>`;
+  }
+  /* 잠금화면 위젯: 디데이 · 음악 · 알람 */
+  function lockWidgets() {
+    const W = P.lockWidgets; if (!W) return "";
+    let dday = "";
+    if (W.dday) {
+      const [m, d] = W.dday.md.split("-").map(Number);
+      let tgt = new Date(TODAY.getFullYear(), m - 1, d);
+      const base = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate());
+      if (tgt < base) tgt = new Date(TODAY.getFullYear() + 1, m - 1, d);
+      const n = Math.round((tgt - base) / 864e5);
+      dday = `<div class="lw-dday"><small>${esc(W.dday.label)}</small><b>${n === 0 ? "D-DAY" : "D-" + n}</b></div>`;
+    }
+    const music = W.music ? `<div class="lw-circ"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg><span>${esc(W.music)}</span></div>` : "";
+    const alarm = W.alarm ? `<div class="lw-circ"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7" fill="currentColor"/><path d="M12 9.5V13l2.2 1.6" stroke="#8aa" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M4 6l3-2.5M20 6l-3-2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${esc(W.alarm)}</span></div>` : "";
+    return `<div class="lk-widgets">${dday}<div class="lw-right">${music}${alarm}</div></div>`;
+  }
   function lockPhone() {
     locked = true; pin = "";
     lockEl?.remove();
@@ -1192,8 +1216,9 @@
     lockEl = h(`<div class="lock">
       <div class="lk-main">
         <svg class="lk-ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
-        <div class="lk-date">${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 ${WD[TODAY.getDay()]}요일</div>
-        <div class="lk-time" data-ltime>${+hh > 12 ? +hh - 12 : +hh}:${mm}</div>
+        <div class="lk-date">${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 (${WD[TODAY.getDay()]})</div>
+        ${lockTime(`${+hh > 12 ? +hh - 12 : +hh}:${mm}`)}
+        ${lockWidgets()}
         <div class="lk-bottom"><span class="lk-btn"><svg viewBox="0 0 24 24"><path d="M8 2h8l-1.5 6v13a1.5 1.5 0 0 1-1.5 1.5h-2A1.5 1.5 0 0 1 9.5 21V8z" fill="currentColor"/></svg></span><span class="lk-btn"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="currentColor"/><circle cx="12" cy="13" r="3.5" fill="#333"/></svg></span></div>
         <div class="lk-hint">위로 쓸어올려 열기</div>
       </div>

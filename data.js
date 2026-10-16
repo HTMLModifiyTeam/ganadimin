@@ -123,6 +123,8 @@ window.PHONE = {
     notes: "", mail: "", weather: "", insta: "", blockblast: "", mines: "",
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
+  /* 잠금화면 위젯: dday(월-일 기준 남은 날), music(곡 제목), alarm(다음 알람) */
+  lockWidgets: { dday: { label: "변호사님 생일🩷", md: "06-17" }, music: "고백", alarm: "6:00" },
   badges: { phone: 2, mail: 2, messages: 4, kakao: 15 },
 
   /* 프로필 사진 (비우면 기본 아이콘) */
