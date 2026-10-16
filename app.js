@@ -154,7 +154,7 @@
   const apps = [
     ["mail", "메일"], ["calendar", "캘린더"], ["clock", "시계"], ["weather", "날씨"],
     ["notes", "메모"], ["photos", "사진"], ["camera", "카메라"], ["insta", "Instagram"],
-    ["karrot", "당근"], ["blockblast", "Block Blast"], ["mines", "지뢰찾기"]
+    ["blockblast", "Block Blast"], ["mines", "지뢰찾기"]
   ];
   /* 홈 화면 위젯: 오늘 날짜 + 다음 일정 2개 */
   function nextEvents(n) {
@@ -830,7 +830,105 @@
     return el;
   }
 
-  const OPEN = { calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
+
+  /* ================= 지뢰찾기 (실제 플레이 + 최고기록) ================= */
+  function minesApp() {
+    const M = P.minesweeper || {};
+    const W = M.cols || 9, H = M.rows || 9, N = M.mines || 10;
+    const KEY = "phone-mines-best";
+    const loadBest = () => { let v = M.best ?? null; try { const s = localStorage.getItem(KEY); if (s) v = Math.min(v ?? Infinity, +s); } catch (e) {} return v; };
+    const fmt = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`;
+    let cells, started, over, flagMode = false, t0 = 0, timer = null, opened = 0, best = loadBest();
+    const el = h(`<section class="screen mines">
+      <div class="navbar"><button class="pill round" data-home>${ic.back}</button><b style="font-size:17px">지뢰찾기</b><span class="pill round" data-reset>↻</span></div>
+      <div class="ms-bar"><div><small>남은 지뢰</small><b data-left>${N}</b></div><button class="ms-face" data-reset>🙂</button><div><small>시간</small><b data-time>0:00</b></div></div>
+      <div class="ms-best">최고 기록 <b data-best>${best != null ? fmt(best) : "-"}</b></div>
+      <div class="ms-board" data-board style="grid-template-columns:repeat(${W},1fr)"></div>
+      <div class="ms-tools"><button class="ms-mode on" data-mode="dig">⛏ 열기</button><button class="ms-mode" data-mode="flag">🚩 깃발</button></div>
+      <div class="ms-msg" data-msg></div>
+    </section>`);
+    const board = el.querySelector("[data-board]"), faceEl = el.querySelector(".ms-face"), msg = el.querySelector("[data-msg]");
+    function reset() {
+      clearInterval(timer); timer = null; started = false; over = false; opened = 0;
+      cells = Array.from({ length: W * H }, () => ({ mine: false, open: false, flag: false, n: 0 }));
+      el.querySelector("[data-time]").textContent = "0:00"; el.querySelector("[data-left]").textContent = N;
+      faceEl.textContent = "🙂"; msg.textContent = ""; msg.className = "ms-msg";
+      board.innerHTML = cells.map((_, i) => `<button class="ms-c" data-i="${i}"></button>`).join("");
+    }
+    const nb = i => { const x = i % W, y = (i / W) | 0, r = []; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dy) continue; const nx = x + dx, ny = y + dy; if (nx >= 0 && ny >= 0 && nx < W && ny < H) r.push(ny * W + nx); } return r; };
+    function plant(safe) {
+      const ban = new Set([safe, ...nb(safe)]); let k = 0;
+      while (k < N) { const i = Math.floor(Math.random() * W * H); if (!ban.has(i) && !cells[i].mine) { cells[i].mine = true; k++; } }
+      cells.forEach((c, i) => c.n = nb(i).filter(j => cells[j].mine).length);
+    }
+    function draw(i) {
+      const c = cells[i], b = board.children[i];
+      b.className = "ms-c" + (c.open ? " open" : "") + (c.flag ? " flag" : "") + (c.boom ? " boom" : "") + (c.open && c.n && !c.mine ? " n" + c.n : "");
+      b.textContent = c.flag && !c.open ? "🚩" : c.open ? (c.mine ? "💣" : c.n || "") : "";
+    }
+    function open(i) {
+      const st = [i];
+      while (st.length) {
+        const j = st.pop(), c = cells[j];
+        if (c.open || c.flag) continue;
+        c.open = true; opened++; draw(j);
+        if (!c.mine && c.n === 0) nb(j).forEach(k => { if (!cells[k].open) st.push(k); });
+      }
+    }
+    function end(win) {
+      over = true; clearInterval(timer);
+      const t = Math.floor((Date.now() - t0) / 1000);
+      if (win) {
+        faceEl.textContent = "😎";
+        cells.forEach((c, i) => { if (c.mine && !c.flag) { c.flag = true; draw(i); } });
+        el.querySelector("[data-left]").textContent = 0;
+        let rec = "";
+        if (best == null || t < best) { best = t; try { localStorage.setItem(KEY, String(t)); } catch (e) {} el.querySelector("[data-best]").textContent = fmt(t); rec = " · 최고 기록!"; }
+        msg.textContent = `성공! ${fmt(t)}${rec}`; msg.className = "ms-msg win";
+      } else {
+        faceEl.textContent = "😵";
+        cells.forEach((c, i) => { if (c.mine) { c.open = true; draw(i); } });
+        msg.textContent = "펑! 다시 해볼까요?"; msg.className = "ms-msg lose";
+      }
+    }
+    function act(i, flag) {
+      if (over) return;
+      const c = cells[i];
+      if (flag) {
+        if (c.open) return;
+        c.flag = !c.flag; draw(i);
+        el.querySelector("[data-left]").textContent = N - cells.filter(x => x.flag).length;
+        return;
+      }
+      if (c.flag) return;
+      if (!started) {
+        started = true; plant(i); t0 = Date.now();
+        timer = setInterval(() => { if (!el.isConnected) { clearInterval(timer); return; } el.querySelector("[data-time]").textContent = fmt(Math.floor((Date.now() - t0) / 1000)); }, 500);
+      }
+      if (c.open && c.n) {   // 숫자를 누르면 주변 깃발 수가 맞을 때 나머지를 한 번에 열기
+        const ns = nb(i); if (ns.filter(j => cells[j].flag).length === c.n) ns.forEach(j => { if (!cells[j].open && !cells[j].flag) { if (cells[j].mine) { cells[j].open = true; cells[j].boom = true; draw(j); end(false); } else open(j); } });
+      } else if (c.mine) { c.open = true; c.boom = true; draw(i); end(false); return; }
+      else open(i);
+      if (!over && opened === W * H - N) end(true);
+    }
+    // 길게 누르면 깃발
+    let pressT = null, longDone = false;
+    board.addEventListener("pointerdown", e => { const b = e.target.closest("[data-i]"); if (!b) return; longDone = false; pressT = setTimeout(() => { longDone = true; act(+b.dataset.i, true); try { navigator.vibrate && navigator.vibrate(30); } catch (_) {} }, 380); });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(t => board.addEventListener(t, () => clearTimeout(pressT)));
+    board.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (!b || longDone) return; act(+b.dataset.i, flagMode); });
+    board.addEventListener("contextmenu", e => { e.preventDefault(); const b = e.target.closest("[data-i]"); if (b && !longDone) act(+b.dataset.i, true); });
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-home]")) { goHome(); return; }
+      if (e.target.closest("[data-reset]")) { reset(); return; }
+      const m = e.target.closest("[data-mode]");
+      if (m) { flagMode = m.dataset.mode === "flag"; el.querySelectorAll("[data-mode]").forEach(x => x.classList.toggle("on", x === m)); }
+    });
+    el._cleanup = () => clearInterval(timer);
+    reset();
+    return el;
+  }
+
+  const OPEN = { mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
 
 
   /* ================= 흐르는 시계 · 캘린더 알림 ================= */

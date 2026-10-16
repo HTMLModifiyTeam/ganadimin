@@ -639,3 +639,28 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 .dock{background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 2px 12px rgba(0,0,0,.05)}
 .widget{background:rgba(255,255,255,.65);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 2px 12px rgba(0,0,0,.05)}
+
+/* 지뢰찾기 */
+.mines{background:#f2f2f7}
+.ms-bar{display:flex;justify-content:space-between;align-items:center;margin:4px 20px 6px;background:#fff;border-radius:18px;padding:10px 18px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ms-bar div{display:flex;flex-direction:column;align-items:center;min-width:64px}
+.ms-bar small{font-size:11px;color:#8e8e93}
+.ms-bar b{font-size:22px;font-variant-numeric:tabular-nums}
+.ms-face{font-size:30px;width:52px;height:52px;border-radius:50%;background:#f2f2f7}
+.ms-best{text-align:center;font-size:13px;color:#636366;margin:4px 0 10px}
+.ms-best b{color:#111}
+.ms-board{display:grid;gap:3px;margin:0 14px;padding:6px;background:#c7ccd4;border-radius:14px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.ms-c{aspect-ratio:1;border-radius:6px;background:linear-gradient(#fdfdfd,#e6e8ec);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);font-size:clamp(13px,4.2vw,19px);font-weight:800;display:flex;align-items:center;justify-content:center;-webkit-touch-callout:none}
+.ms-c.open{background:#eef0f3;box-shadow:none}
+.ms-c.boom{background:#ff6b6b}
+.ms-c.n1{color:#2563eb}.ms-c.n2{color:#16a34a}.ms-c.n3{color:#dc2626}.ms-c.n4{color:#7c3aed}.ms-c.n5{color:#b45309}.ms-c.n6{color:#0891b2}.ms-c.n7{color:#111}.ms-c.n8{color:#6b7280}
+.ms-c.flag{font-size:clamp(12px,3.8vw,17px)}
+.ms-tools{display:flex;gap:10px;justify-content:center;margin:14px 0 6px}
+.ms-mode{padding:9px 18px;border-radius:20px;background:#fff;font-size:15px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.ms-mode.on{background:#111;color:#fff}
+.ms-msg{text-align:center;font-size:16px;font-weight:600;min-height:24px;margin-top:4px}
+.ms-msg.win{color:#16a34a}.ms-msg.lose{color:#dc2626}
+.ms-c{background:linear-gradient(#e3e8f0,#c9d1dd);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(0,0,0,.12)}
+.ms-c.open{background:#fbfbfc;box-shadow:none}
+.ms-board{background:#aeb6c2}
+.ms-c.open.boom{background:#ff6b6b}

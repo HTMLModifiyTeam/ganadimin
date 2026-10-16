@@ -130,7 +130,7 @@ window.PHONE = {
      비워두면("") 기본 아이콘. 캘린더·시계를 이미지로 바꾸면 날짜·시곗바늘은 움직이지 않아요. */
   icons: {
     calendar: "", photos: "", camera: "", clock: "",
-    notes: "", mail: "", weather: "", insta: "", karrot: "", blockblast: "", mines: "",
+    notes: "", mail: "", weather: "", insta: "", blockblast: "", mines: "",
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   badges: { phone: 8, mail: 2, messages: 3, kakao: 12 },
@@ -544,6 +544,10 @@ window.PHONE = {
     timer: { h: 0, m: 9, s: 0, sound: "공지음" },
     timerRecent: ["9분", "30분", "1시간"]
   },
+
+  /* ---------- 지뢰찾기 ----------
+     best: 원래 저장된 최고 기록(초). 보는 사람이 더 빨리 깨면 그 사람 기기에 새 기록이 저장돼요 */
+  minesweeper: { cols: 9, rows: 9, mines: 10, best: 47 },
 
   /* ---------- 캘린더 ----------
      cal(캘린더 종류): 업무 / 재판 / 회식 / 개인
