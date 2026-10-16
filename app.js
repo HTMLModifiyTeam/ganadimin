@@ -835,6 +835,53 @@
 
 
   /* ================= 지뢰찾기 (실제 플레이 + 최고기록) ================= */
+  /* ================= 인스타그램 ================= */
+  function instaApp() {
+    const G = P.insta || { stories: [], posts: [] };
+    const S = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+    const II = {
+      heart: S('<path d="M12 20.5s-8-5-8-11a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 6-8 11-8 11z"/>'),
+      com: S('<path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-4.2A8.5 8.5 0 1 1 20.5 11.5z"/>'),
+      send: S('<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M21 3 10 13"/>'),
+      save: S('<path d="M6 3.5h12v17l-6-4.5-6 4.5z"/>'),
+      home: S('<path d="M3.5 10.5 12 3.5l8.5 7V20a.5.5 0 0 1-.5.5h-5v-6h-6v6H4a.5.5 0 0 1-.5-.5z"/>'),
+      search: S('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>'),
+      plus: S('<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M12 8v8M8 12h8"/>'),
+      reels: S('<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M3.5 8.5h17M9 3.5l2.5 5M14.5 3.5l2.5 5"/><path d="m10.5 12 4 2.3-4 2.3z" fill="currentColor"/>'),
+      dm: S('<path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-4.2A8.5 8.5 0 1 1 20.5 11.5z"/><path d="m8 13.5 3-3 2 2 3-3"/>'),
+      more: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>`
+    };
+    const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(id[0].toUpperCase())}</span>`;
+    const story = s => `<div class="ig-story${s.seen ? " seen" : ""}"><div class="ring">${s.me ? avatar(P.insta.me || "me", true) + '<b class="add">+</b>' : avatar(s.id, true)}</div><small>${esc(s.me ? "내 스토리" : s.id)}</small></div>`;
+    const post = (q, i) => `<article class="ig-post">
+      <header>${avatar(q.id)}<div><b>${esc(q.id)}</b>${q.place ? `<small>${esc(q.place)}</small>` : ""}</div><span class="mo">${II.more}</span></header>
+      <div class="ig-img" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}</div>
+      <div class="ig-act"><button data-like="${i}">${II.heart}</button>${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
+      <div class="ig-txt"><b data-likes="${i}">좋아요 ${q.likes.toLocaleString()}개</b>
+        <p><b>${esc(q.id)}</b> ${esc(q.caption)}</p>
+        ${q.comments ? `<span class="c">댓글 ${q.comments}개 모두 보기</span>` : ""}
+        <span class="t">${esc(q.when)}</span></div>
+    </article>`;
+    const el = h(`<section class="screen ig">
+      <div class="ig-top"><button class="ig-back" data-home>${ic.back}</button><span class="ig-logo">Instagram</span><span class="ig-ti">${II.heart}${II.dm}</span></div>
+      <div class="scroll">
+        <div class="ig-stories">${[{ me: true }, ...(G.stories || [])].map(story).join("")}</div>
+        ${(G.posts || []).map(post).join("")}
+        <div style="height:30px"></div>
+      </div>
+      <nav class="ig-tab">${II.home}${II.search}${II.plus}${II.reels}${avatar(G.me || "me")}</nav>
+    </section>`);
+    el.querySelector(".ig-tab svg").classList.add("on");
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-home]")) { goHome(); return; }
+      const b = e.target.closest("[data-like]"); if (!b) return;
+      const i = +b.dataset.like, q = G.posts[i]; q.liked = !q.liked;
+      b.classList.toggle("on", q.liked);
+      el.querySelector(`[data-likes="${i}"]`).textContent = `좋아요 ${(q.likes + (q.liked ? 1 : 0)).toLocaleString()}개`;
+    });
+    return el;
+  }
+
   /* ================= 블록 블래스트 ================= */
   function blockblastApp() {
     const SZ = 8, KEY = "phone-bb-best";
@@ -1051,7 +1098,7 @@
     return el;
   }
 
-  const OPEN = { blockblast: blockblastApp, mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
+  const OPEN = { insta: instaApp, blockblast: blockblastApp, mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
 
 
   /* ================= 흐르는 시계 · 캘린더 알림 ================= */

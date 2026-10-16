@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162257") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162302") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -702,3 +702,40 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .bb-over b{font-size:20px}
 .bb-over span{font-size:30px;font-weight:800}
 .bb-over button{margin-top:8px;padding:12px 30px;border-radius:24px;background:#ffc93c;color:#2a2f6e;font-weight:800;font-size:16px}
+
+/* ===== 인스타그램 ===== */
+.ig{background:#fff;color:#000}
+.ig-top{display:flex;align-items:center;gap:6px;padding:52px 14px 6px 8px;flex:none}
+.ig-back{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.ig-back svg{width:20px;height:20px;stroke:#000}
+.ig-logo{font-family:"Brush Script MT","Snell Roundhand","Segoe Script",cursive;font-size:30px;line-height:1;flex:1;padding-top:2px}
+.ig-ti{display:flex;gap:18px}
+.ig-ti svg,.ig-act svg,.ig-tab svg{width:26px;height:26px}
+.ig-stories{display:flex;gap:14px;overflow-x:auto;padding:6px 12px 12px;border-bottom:1px solid #efefef;scrollbar-width:none}
+.ig-stories::-webkit-scrollbar{display:none}
+.ig-story{display:flex;flex-direction:column;align-items:center;gap:5px;flex:none;width:70px}
+.ig-story .ring{position:relative;padding:2.5px;border-radius:50%;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+.ig-story.seen .ring{background:#dbdbdb}
+.ig-story:first-child .ring{background:none}
+.ig-story .ring>.ig-av{border:3px solid #fff;box-sizing:content-box}
+.ig-story small{font-size:11.5px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#262626}
+.ig-story .add{position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;background:#0095f6;color:#fff;font-size:17px;line-height:19px;text-align:center;box-shadow:0 0 0 2.5px #fff}
+.ig-av{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex:none}
+.ig-av.big{width:62px;height:62px;font-size:24px}
+.ig-post header{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.ig-post header div{flex:1;display:flex;flex-direction:column;line-height:1.25}
+.ig-post header b{font-size:14px}
+.ig-post header small{font-size:12px;color:#262626}
+.ig-post .mo svg{width:20px;height:20px}
+.ig-img{aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.ig-img span{font-size:110px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.15))}
+.ig-act{display:flex;gap:14px;padding:10px 12px 6px;align-items:center}
+.ig-act button{display:flex}
+.ig-act button.on svg{fill:#ff3040;stroke:#ff3040}
+.ig-txt{padding:0 12px 14px;font-size:14px;line-height:1.45;display:flex;flex-direction:column;gap:3px}
+.ig-txt p{margin:0}
+.ig-txt .c{color:#737373}
+.ig-txt .t{color:#737373;font-size:12px}
+.ig-tab{display:flex;justify-content:space-around;align-items:center;height:56px;border-top:1px solid #efefef;padding-bottom:20px;flex:none;background:#fff}
+.ig-tab .ig-av{width:26px;height:26px;font-size:11px}
+.ig-tab svg.on{stroke-width:2.6}
