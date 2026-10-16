@@ -252,6 +252,36 @@
     o.frequency.value = 1209; o.connect(g); g.connect(audioCtx.destination);
     g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.0001, t + .12); o.start(t); o.stop(t + .13);
   }
+  /* 통화 배경음: 파도 소리 (걸러낸 잡음 + 천천히 밀려왔다 빠지는 음량) */
+  let seaNodes = null;
+  function startSea() {
+    if (!audioCtx || seaNodes) return;
+    const sr = audioCtx.sampleRate, len = sr * 4, buf = audioCtx.createBuffer(1, len, sr), d = buf.getChannelData(0);
+    let last = 0; for (let i = 0; i < len; i++) { last = (last + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }   // 브라운 노이즈
+    const src = audioCtx.createBufferSource(); src.buffer = buf; src.loop = true;
+    const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 650;
+    const swell = audioCtx.createGain(); swell.gain.value = 0;
+    const out = audioCtx.createGain(); out.gain.value = 0;
+    src.connect(lp); lp.connect(swell); swell.connect(out); out.connect(audioCtx.destination);
+    const t = audioCtx.currentTime;
+    out.gain.linearRampToValueAtTime(.55, t + 1.5);
+    // 파도: 6~8초 간격으로 밀려왔다 빠짐
+    let at = t;
+    for (let k = 0; k < 40; k++) {
+      const per = 6 + Math.random() * 2.5, peak = .35 + Math.random() * .3;
+      swell.gain.setValueAtTime(.06, at);
+      swell.gain.linearRampToValueAtTime(peak, at + per * .45);
+      swell.gain.exponentialRampToValueAtTime(.06, at + per);
+      at += per;
+    }
+    src.start();
+    seaNodes = { src, out };
+  }
+  function stopSea(fast) {
+    if (!seaNodes) return;
+    const { src, out } = seaNodes; seaNodes = null;
+    try { const t = audioCtx.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + (fast ? .05 : .6)); src.stop(t + (fast ? .1 : .7)); } catch (e) {}
+  }
   /* 지직거리는 잡음 (통화가 강제로 끊길 때) */
   function noiseBurst(sec = 1.2) {
     if (!audioCtx) return;
@@ -382,7 +412,7 @@
       const RC = (P.messages.replyCall || {})[name], cs = (P.callScripts || {})[name];
       if (RC && cs && !cs._used && !RC._fired) {
         RC._fired = true;
-        setTimeout(() => { if (!callEl) incomingCall({ from: name, ringSeconds: 30, lineStart: 1100, hangUpAfter: 900, lines: cs.lines, onAnswer: () => { cs._used = true; } }); }, RC.delay || 3000);
+        setTimeout(() => { if (!callEl) incomingCall({ from: name, ringSeconds: 30, lineStart: 1100, hangUpAfter: 900, lines: cs.lines, ambience: cs.ambience, onAnswer: () => { cs._used = true; } }); }, RC.delay || 3000);
       }
     });
     return el;
@@ -1439,6 +1469,7 @@
       const endCall = (cut, lab) => { if (ended) return; ended = true; timers.forEach(clearTimeout); clearInterval(callTimer); if (cut !== true) lineEl.classList.remove("show"); logCall(name, false); tEl.textContent = lab || "통화 종료"; setTimeout(closeCall, cut === true ? 1600 : 900); };
       callEl.querySelector("[data-end]").onclick = () => endCall();
       if (C.onAnswer) C.onAnswer();
+      if (C.ambience === "sea") startSea();
       // 상대방 대사: 차례대로 보여주고 마지막 대사가 사라진 뒤 전화가 끊김
       runLines(C.lines || [], lineEl, timers, { start: C.lineStart, hangUp: C.hangUpAfter, name, showWho: true }, endCall);
     }
@@ -1457,7 +1488,7 @@
           lineEl.classList.toggle("me", l.who === "me");
           lineEl.classList.add("show");
         }, at));
-        if (l.noise) timers.push(setTimeout(() => noiseBurst(1.3), at + 500));
+        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); stopSea(true); }, at + 500));
         timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 1300 : 0)));
         return;
       }
@@ -1529,6 +1560,7 @@
       clearInterval(ringbackTimer);
       if (!answered) { finish("응답 없음"); return; }
       script._used = true;
+      if (script.ambience === "sea") startSea();
       callEl.classList.remove("dialing");
       const t0 = Date.now();
       const draw = () => { const sec = Math.floor((Date.now() - t0) / 1000); tEl.textContent = `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
@@ -1544,6 +1576,7 @@
   }
   function refreshCalls() { document.querySelectorAll("[data-calls]").forEach(box => box.innerHTML = callsHTML()); }
   function closeCall() {
+    stopSea();
     if (!callEl) return;
     const el = callEl; callEl = null;
     $("#device").classList.remove("in-call");

@@ -58,7 +58,7 @@ window.PHONE = {
         { who: "me", text: "헉… 넵! 저 달려갈게요!!" },
         { text: "과속하지 말고—", cut: true }
       ] },
-    "011-617-1201": { answer: 1, answerAfter: 5000, deadAfterOnce: true, deadText: "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", lines: [
+    "011-617-1201": { answer: 1, answerAfter: 5000, ambience: "sea", deadAfterOnce: true, deadText: "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", lines: [
       { who: "me", text: "누구세요?" },
       { text: "……", ms: 3000 },
       { who: "me", text: "…여보세요?" },
