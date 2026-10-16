@@ -125,9 +125,9 @@ window.PHONE = {
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   /* 잠금화면 위젯: dday(월-일 기준 남은 날), music(곡 제목), alarm(다음 알람) */
-  lockWidgets: { dday: { label: "변호사님 생일🩷", md: "06-17" }, music: "고백", alarm: "6:00",
-    /* 음악 위젯을 누르면 뜨는 재생 화면 (length = 곡 길이, at = 재생 중인 위치(초), link = 바깥으로 듣기 링크) */
-    player: { title: "고백", artist: "멜로망스", length: "4:12", at: 47, link: "https://www.youtube.com/results?search_query=%EB%A9%9C%EB%A1%9C%EB%A7%9D%EC%8A%A4+%EA%B3%A0%EB%B0%B1" } },
+  lockWidgets: { dday: { label: "변호사님 생일🩷", md: "06-17" }, music: "애상", alarm: "6:00",
+    /* 음악 위젯을 누르면 바로 열리는 링크 */
+    musicLink: "https://youtu.be/0g-_cDxZzMg?si=qOOrpSFRlTf7YeWI" },
   badges: { phone: 2, mail: 2, messages: 4, kakao: 15 },
 
   /* 프로필 사진 (비우면 기본 아이콘) */

@@ -1541,7 +1541,7 @@
     lockEl.addEventListener("pointerdown", e => { if (!lockEl.classList.contains("pin")) sy = e.clientY; });
     lockEl.addEventListener("pointerup", e => { if (sy !== null && sy - e.clientY > 60) showPin(); sy = null; });
     lockEl.addEventListener("click", e => {
-      if (e.target.closest("[data-music]")) { openPlayer(); return; }
+      if (e.target.closest("[data-music]")) { const L = (P.lockWidgets || {}).musicLink; if (L) window.open(L, "_blank", "noopener"); return; }
       const k = e.target.closest("[data-k]"); if (k) { press(k.dataset.k); return; }
       if (e.target.closest("[data-del]")) { if (pin) { pin = pin.slice(0, -1); drawPin(); } else hidePin(); }
     });
