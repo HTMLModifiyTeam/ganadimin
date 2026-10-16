@@ -1444,7 +1444,7 @@
           lineEl.classList.toggle("me", l.who === "me");
           lineEl.classList.add("show");
         }, at));
-        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); callEl?.classList.add("glitch"); }, at + 500));
+        if (l.noise) timers.push(setTimeout(() => noiseBurst(1.3), at + 500));
         timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 1300 : 0)));
         return;
       }

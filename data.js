@@ -63,8 +63,10 @@ window.PHONE = {
       { text: "……", ms: 3000 },
       { who: "me", text: "…여보세요?" },
       { text: "…잠시, 끊지 마. 잠시만." },
-      { text: "…강민재. 진짜 강민재야?" },
-      { text: "…그곳의 차검사님은…", ms: 3200 },
+      { text: "…강민재. 진짜 강민재, 나야?" },
+      { text: "……", ms: 2600 },
+      { text: "…그곳의 차 검사님은,", ms: 3000 },
+      { text: "……", ms: 2600 },
       { text: "나도—", cut: true, noise: true, cutAfter: 700, endLabel: "연결 끊김" }
     ] },
     "새벽경제 김도윤 기자": { lines: [
