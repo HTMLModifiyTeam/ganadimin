@@ -600,12 +600,14 @@ window.PHONE = {
     startTab: "alarm",            // 처음 열리는 탭: world / alarm / stopwatch / timer
     sleep: "알람 없음",            // 수면 | 기상 칸
     alarms: [
+      { time: "06:00", label: "알람", repeat: "주중", on: true },
+      { time: "06:10", label: "알람", repeat: "주중", on: true },
+      { time: "06:20", label: "알람", repeat: "주중", on: true },
       { time: "06:30", label: "알람", repeat: "주중", on: true },
-      { time: "06:45", label: "알람", repeat: "주중", on: true },
-      { time: "07:00", label: "알람", repeat: "주중", on: true },
-      { time: "07:05", label: "기상", repeat: "주중", on: true },
-      { time: "07:10", label: "진짜 기상!!", repeat: "주중", on: true },
-      { time: "07:15", label: "진짜진짜로일어나야함안그럼늦음", repeat: "주중", on: true }
+      { time: "06:35", label: "알람", repeat: "주중", on: true },
+      { time: "06:40", label: "기상", repeat: "주중", on: true },
+      { time: "06:45", label: "진짜 기상!!", repeat: "주중", on: true },
+      { time: "06:50", label: "진짜진짜로일어나야함안그럼늦음", repeat: "주중", on: true }
     ],
     /* 세계 시계: offset = 그 도시의 UTC 시차. 맨 위 줄 기준 시각은 위의 time 값 */
     home: 9,
