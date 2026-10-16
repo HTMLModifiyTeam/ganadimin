@@ -208,12 +208,65 @@
         <div class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6v6l-3 2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>최근 통화</div>
         <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="9.5" r="3.5" fill="#fff"/><path d="M5.5 18.5c1.5-3 4-4 6.5-4s5 1 6.5 4" fill="#fff"/></svg>연락처</div>
         <div data-keypad><svg viewBox="0 0 24 24">${[4, 12, 20].flatMap(y => [5, 12, 19].map(x => `<circle cx="${x}" cy="${y}" r="2.6"/>`)).join("")}</svg>키패드</div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
+        <div data-vmail><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
       </nav>
     </section>`);
     el.addEventListener("click", e => {
       if (e.target.closest("[data-keypad]")) { show(keypadView(), "push"); return; }
+      if (e.target.closest("[data-vmail]")) { show(voicemailView(), "push"); return; }
       const r = e.target.closest("[data-dial]"); if (r && !e.target.closest(".ibtn")) outgoingCall(r.dataset.dial);
+    });
+    return el;
+  }
+  /* 음성 사서함: 누르면 펼쳐지고, 재생하면 텍스트 변환이 한 줄씩 나타남 */
+  function voicemailView() {
+    const V = P.voicemail || [];
+    const secs = s => { const [m, x] = s.split(":").map(Number); return m * 60 + x; };
+    const el = h(`<section class="screen white vm">
+      <div class="navbar"><button class="pill round" data-back>${ic.back}</button><span class="pill">편집</span></div>
+      <div class="scroll">
+        <div class="bigtitle">음성 사서함</div>
+        ${V.map((v, i) => `<div class="vm-row" data-vm="${i}">
+          <div class="vm-top">${v.new ? '<i class="vm-dot"></i>' : '<i class="vm-dot off"></i>'}<div class="vm-who"><b>${esc(v.from)}</b><small>${esc(v.kind || "휴대전화")}</small></div><div class="vm-when"><span>${esc(v.date)}</span><small>${esc(v.length)}</small></div></div>
+          <div class="vm-body">
+            <div class="vm-bar"><i data-fill></i></div>
+            <div class="vm-times"><span data-cur>0:00</span><span data-left>-${esc(v.length)}</span></div>
+            <div class="vm-ctrl"><button data-vplay><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button><span class="vm-spk">스피커</span><span class="vm-del">삭제</span></div>
+            <div class="vm-tx"><small>텍스트 변환 (베타)</small><p data-tx></p></div>
+          </div>
+        </div>`).join("")}
+        <div style="height:30px"></div>
+      </div>
+    </section>`);
+    let playing = null;
+    const stop = () => { if (!playing) return; clearInterval(playing.t); stopSea(); const r = playing.row; r.classList.remove("playing"); r.querySelector("[data-vplay]").innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`; playing = null; };
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-back]")) { stop(); back(); return; }
+      const row = e.target.closest("[data-vm]"); if (!row) return;
+      const i = +row.dataset.vm, v = V[i];
+      if (e.target.closest("[data-vplay]")) {
+        if (playing && playing.row === row) { stop(); return; }
+        stop();
+        const total = secs(v.length), tx = row.querySelector("[data-tx]"), lines = v.transcript || [];
+        let pos = 0; tx.textContent = "";
+        row.classList.add("playing"); row.querySelector("[data-vplay]").innerHTML = `<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>`;
+        if (v.sea) startSea();
+        const draw = () => {
+          row.querySelector("[data-fill]").style.width = (pos / total * 100) + "%";
+          row.querySelector("[data-cur]").textContent = `0:${String(pos).padStart(2, "0")}`.replace(/^0:(\d\d\d)/, "$1");
+          row.querySelector("[data-left]").textContent = "-" + `${Math.floor((total - pos) / 60)}:${String((total - pos) % 60).padStart(2, "0")}`;
+          const k = Math.min(lines.length, Math.ceil(pos / total * lines.length));
+          tx.textContent = lines.slice(0, k).join(" ");
+        };
+        playing = { row, t: setInterval(() => { if (!el.isConnected) { stop(); return; } pos++; draw(); if (pos >= total) { tx.textContent = lines.join(" "); setTimeout(stop, 300); } }, 1000) };
+        draw();
+        if (v.new) { v.new = false; row.querySelector(".vm-dot").classList.add("off"); }
+        return;
+      }
+      if (e.target.closest(".vm-body")) return;
+      const open = row.classList.contains("open");
+      el.querySelectorAll(".vm-row.open").forEach(r => r.classList.remove("open"));
+      if (!open) row.classList.add("open");
     });
     return el;
   }
@@ -232,13 +285,14 @@
         <div data-recent><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 6v6l-3 2" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>최근 통화</div>
         <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="9.5" r="3.5" fill="#fff"/><path d="M5.5 18.5c1.5-3 4-4 6.5-4s5 1 6.5 4" fill="#fff"/></svg>연락처</div>
         <div class="on"><svg viewBox="0 0 24 24">${[4, 12, 20].flatMap(y => [5, 12, 19].map(x => `<circle cx="${x}" cy="${y}" r="2.6"/>`)).join("")}</svg>키패드</div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
+        <div data-vmail><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="12" r="4"/><circle cx="17.5" cy="12" r="4"/><path d="M6.5 16h11"/></svg>음성 사서함</div>
       </nav>
     </section>`);
     const numEl = el.querySelector("[data-num]"), del = el.querySelector("[data-kdel]");
     const draw = () => { numEl.textContent = fmtNum(n); del.hidden = n === 0; };
     el.addEventListener("click", e => {
       if (e.target.closest("[data-recent]")) { back(); return; }
+      if (e.target.closest("[data-vmail]")) { show(voicemailView(), "push"); return; }
       if (e.target.closest("[data-kk]")) { if (n < digits.length) { n++; draw(); try { keyTone(); } catch (x) {} } return; }
       if (e.target.closest("[data-kdel]")) { if (n) { n--; draw(); } return; }
       if (e.target.closest("[data-kcall]") && n === digits.length && n) outgoingCall(target);

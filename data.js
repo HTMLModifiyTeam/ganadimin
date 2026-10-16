@@ -27,6 +27,17 @@ window.PHONE = {
   passcode: "",                // 잠금화면 암호. 비워두면 아무 숫자 4자리나 눌러도 열려요 (예: "1201")
   /* 잠금 해제 후 휴대폰 속 시간이 afterMinutes분 흐르면 걸려오는 전화 (받아도 소리는 나지 않아요) */
   incomingCall: null,
+  /* 음성 사서함 (위에서부터 최신순). sea: 재생할 때 파도 소리, transcript: 재생하면 차례로 나타나는 텍스트 변환 */
+  voicemail: [
+    { from: "011-617-1201", date: "2026. 6. 17.", length: "0:09", new: true, sea: true,
+      transcript: ["(파도 소리)", "……", "…오늘도 거기 있어?"] },
+    { from: "011-617-1201", date: "2023. 10. 18.", length: "0:14", new: true, sea: true,
+      transcript: ["…강민재.", "목소리라도,", "한 번만 들려줘.", "……"] },
+    { from: "011-617-1201", date: "2019. 7. 19.", length: "0:06", sea: true,
+      transcript: ["(잡음)", "…거기도 비가 오나."] },
+    { from: "011-617-1201", date: "2008. 3. 7.", length: "0:21", sea: true,
+      transcript: ["민재야.", "어디야.", "전화 좀 받아.", "…기다릴게.", "계속."] }
+  ],
   /* 키패드에서 아무 숫자나 누르면 한 자리씩 입력되는 번호 */
   keypadNumber: "011-617-1201",
 
