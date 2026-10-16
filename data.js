@@ -856,6 +856,7 @@ window.PHONE = {
       /* 2026년 10월 */
       { date: "2026-10-16", start: "19:00", end: "22:00", title: "팀 회식", place: "대박집", cal: "회식" },
       { date: "2026-10-18", start: "12:00", end: "18:00", title: "데이트", cal: "개인", alert: true },
+      { date: "2026-10-28", title: "반지 픽업", cal: "개인" },
 
       /* 2026년 11월 */
       { date: "2026-11-27", start: "19:00", end: "22:00", title: "팀 회식", place: "대박집", cal: "회식" },
