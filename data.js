@@ -42,7 +42,7 @@ window.PHONE = {
      answer: 받을 확률 (1 = 무조건), 없으면 answerRate 사용 */
   callScripts: {
     answerRate: 1,        // 1 = 항상 받음
-    "차주한": { lines: [
+    "변호사님❤️": { rejectFirst: [800, 1200], lines: [
       { text: "왜." },
       { who: "me", text: "변호사님! 그냥 목소리 듣고 싶어서요." },
       { text: "용건 없으면 끊는다." },
@@ -130,23 +130,23 @@ window.PHONE = {
   /* ---------- 전화: 최근 통화 ---------- */
   /* dir: in(받은) / out(건) · missed: true → 빨간색(부재중) · count: 연속 통화 횟수 */
   calls: [
-    { name: "차주한", count: 2, kind: "휴대전화", dir: "out", when: "11:41" },
+    { name: "변호사님❤️", count: 2, kind: "휴대전화", dir: "out", when: "11:41" },
     { name: "070-0000-3158", kind: "<스팸의심>", dir: "in", missed: true, when: "11:02" },
     { name: "최종현", kind: "휴대전화", dir: "in", when: "10:37" },
-    { name: "차주한", kind: "휴대전화", dir: "in", when: "09:58" },
+    { name: "변호사님❤️", kind: "휴대전화", dir: "in", when: "09:58" },
     { name: "허민우", kind: "휴대전화", dir: "in", when: "09:12" },
     { name: "오양훈 사무장님", kind: "휴대전화", dir: "in", missed: true, when: "08:50" },
-    { name: "차주한", kind: "휴대전화", dir: "out", when: "08:03" },
+    { name: "변호사님❤️", kind: "휴대전화", dir: "out", when: "08:03" },
     { name: "1661-0000", kind: "<스팸의심>", dir: "in", missed: true, when: "어제" },
     { name: "어머님", kind: "휴대전화", dir: "out", when: "어제" },
-    { name: "차주한", count: 2, kind: "휴대전화", dir: "in", when: "어제" },
+    { name: "변호사님❤️", count: 2, kind: "휴대전화", dir: "in", when: "어제" },
     { name: "새벽경제 김도윤 기자", kind: "휴대전화", dir: "in", missed: true, when: "금요일" },
-    { name: "차주한", kind: "휴대전화", dir: "out", when: "목요일" },
+    { name: "변호사님❤️", kind: "휴대전화", dir: "out", when: "목요일" },
     { name: "+86 000-0000-2741", kind: "<스팸의심>", dir: "in", missed: true, when: "수요일" },
     { name: "최종현", kind: "휴대전화", dir: "out", when: "수요일" },
     { name: "허민우", kind: "휴대전화", dir: "out", when: "수요일" },
     { name: "오양훈 사무장님", kind: "휴대전화", dir: "out", when: "화요일" },
-    { name: "차주한", kind: "휴대전화", dir: "in", when: "월요일" }
+    { name: "변호사님❤️", kind: "휴대전화", dir: "in", when: "월요일" }
   ],
 
   /* ---------- 크롬 ---------- */
@@ -541,7 +541,7 @@ window.PHONE = {
     /* 매년 반복되는 생일 (월-일) */
     birthdays: [
       { md: "12-01", name: "강민재" },
-      { md: "06-17", name: "차주한" }
+      { md: "06-17", name: "변호사님❤️" }
     ],
     holidays: [
       { date: "2025-12-25", title: "성탄절" },

@@ -1092,6 +1092,7 @@
       });
     } catch (e) {}
   }
+  const callTries = {};
   function outgoingCall(name) {
     if (callEl) return;
     const S = P.callScripts || {}, script = S[name] || S["기본"] || { lines: [] };
@@ -1119,6 +1120,9 @@
       logOutgoing(name); tEl.textContent = label; setTimeout(closeCall, keepLine ? 1600 : 900);
     };
     callEl.querySelector("[data-end]").onclick = () => finish(callEl.classList.contains("dialing") ? "통화 취소" : "통화 종료");
+    // 처음 몇 번은 상대가 바로 끊음 (rejectFirst: [ms, ms, ...])
+    const tries = (callTries[name] = (callTries[name] || 0) + 1), rej = script.rejectFirst || [];
+    if (tries <= rej.length) { timers.push(setTimeout(() => { clearInterval(ringbackTimer); finish("통화 종료"); }, rej[tries - 1])); return; }
     const waitMs = answered ? 3000 + Math.random() * 3000 : 9000;
     timers.push(setTimeout(() => {
       clearInterval(ringbackTimer);
