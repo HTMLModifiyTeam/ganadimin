@@ -629,11 +629,26 @@ window.PHONE = {
      img에 "img/파일.jpg"를 넣으면 실제 사진, 비우면 bg 색 + emoji 로 표시 */
   insta: {
     me: "alswo_k",
+    /* DM (위에서부터 최신순). status: 마지막 내 메시지 아래 표시 */
+    dms: [
+      { id: "modernfit_official", name: "모던핏", preview: "🍂 가을 아우터 최대 50% 할인 시작!", when: "2시간", unread: true,
+        msgs: [{ date: "오늘 오전 9:30" }, { text: "안녕하세요 alswo_k님! 모던핏입니다 🧥" }, { text: "🍂 가을 아우터 최대 50% 할인 시작! 지금 프로필 링크에서 확인해 보세요." }] },
+      { id: "fitday_kr", name: "핏데이", preview: "첫 구매 고객님께 30% 쿠폰을 드려요 🎁", when: "1일", unread: true,
+        msgs: [{ date: "어제 오후 6:00" }, { text: "운동 후 한 잔, 핏데이 단백질 쉐이크 💪" }, { text: "첫 구매 고객님께 30% 쿠폰을 드려요 🎁" }] },
+      { id: "runday.korea", name: "러닝데이", preview: "11월 한강 나이트런 참가 신청이 열렸어요!", when: "4일",
+        msgs: [{ date: "10월 14일 오후 12:00" }, { text: "11월 한강 나이트런 참가 신청이 열렸어요! 🏃‍♂️" }, { text: "선착순 500명 · 완주 메달 증정" }] },
+      { id: "luce_jewelry", name: "루체 주얼리", preview: "커플링 각인 서비스 오픈 💍", when: "2주",
+        msgs: [{ date: "10월 2일 오후 3:00" }, { text: "커플링 각인 서비스 오픈 💍" }, { text: "소중한 날짜와 이니셜을 새겨 보세요." }] },
+      { id: "chajuha_n", name: "차주한", preview: "회원님: 변호사님 맞팔 해주신다면서요 ㅠㅠ", when: "3년", status: "전송됨",
+        msgs: [{ date: "2023년 4월 25일 오후 10:12" }, { me: true, text: "변호사님 맞팔 해주신다면서요 ㅠㅠ" }] }
+    ],
     /* 오른쪽 아래 프로필을 누르면 보이는 민재 피드 (위에서부터 최신순) */
     profile: {
       name: "강민재", followers: "192", following: "103",
       /* 팔로잉 목록 맨 위 (profile 이 있으면 눌러서 들어갈 수 있음). 나머지는 랜덤으로 채워짐 */
       followingTop: [ { id: "chajuha_n", name: "차주한", profile: { followers: "21", following: "0" } } ],
+      /* 목록 중간에 끼워 넣을 아는 사람들 (at = 위에서 몇 번째) */
+      followingMix: [ { id: "bongjun_tv", name: "조봉준", at: 2 }, { id: "minwoo.heo", name: "허민우", at: 5 }, { id: "yanghoon_oh", name: "오양훈", at: 9 } ],
       bio: "변호사 👨‍⚖️ | 🏃‍♂️ 러닝 | 맛집 탐방 중 🍚",
       posts: [
         { bg: "linear-gradient(160deg,#ffd194,#d1913c)", emoji: "🥓", place: "대박집", likes: 128, comments: 14, when: "2일 전", caption: "금요일엔 역시 대박집 회식 🥩 사장님 삼겹살 최고!! #회식 #삼겹살맛집" },

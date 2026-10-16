@@ -863,7 +863,7 @@
         <span class="t">${esc(q.when)}</span></div>
     </article>`;
     const el = h(`<section class="screen ig">
-      <div class="ig-top"><button class="ig-back" data-home>${ic.back}</button><span class="ig-logo">Instagram</span><span class="ig-ti">${II.heart}${II.dm}</span></div>
+      <div class="ig-top"><button class="ig-back" data-home>${ic.back}</button><span class="ig-logo">Instagram</span><span class="ig-ti">${II.heart}<button data-dm>${II.dm}</button></span></div>
       <div class="scroll">
         <div class="ig-stories">${[{ me: true }, ...(G.stories || [])].map(story).join("")}</div>
         ${(G.posts || []).map(post).join("")}
@@ -879,12 +879,13 @@
       const parts = ["daily","log","_","official","zip","film","moment","record","pic","seoul"];
       let seed = 7; const r = n => (seed = (seed * 9301 + 49297) % 233280, Math.floor(seed / 233280 * n));
       const rom = { "김":"kim","이":"lee","박":"park","최":"choi","정":"jung","강":"kang","조":"cho","윤":"yoon","장":"jang","임":"lim","한":"han","오":"oh","서":"seo","신":"shin","권":"kwon","황":"hwang","안":"ahn","송":"song","류":"ryu","홍":"hong" };
-      const list = top.slice();
-      while (list.length < total) {
+      const list = top.filter(u => u.at == null), mid = (M.followingMix || []);
+      while (list.length + mid.length < total) {
         const f = fam[r(fam.length)], g = giv[r(giv.length)], k = r(4);
         const id = k === 0 ? `${rom[f]}.${parts[r(parts.length)]}${r(99)}` : k === 1 ? `${parts[r(parts.length)]}_${rom[f]}${r(9)}` : k === 2 ? `__${rom[f]}${r(999)}` : `${rom[f]}_${parts[r(parts.length)]}`;
         list.push({ id, name: f + g });
       }
+      mid.forEach(u => list.splice(Math.min(u.at, list.length), 0, u));
       return list;
     }
     function followingView() {
@@ -917,6 +918,37 @@
           <div class="ig-gtabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17M14.5 3.5v17"/></svg></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1-3 3.2-4.5 5.5-4.5s4.5 1.5 5.5 4.5"/></svg></span></div>
           <div class="ig-empty"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></i><b>게시물 없음</b></div>
         </div>
+      </section>`);
+      v.querySelector("[data-back]").onclick = back;
+      return v;
+    }
+    /* DM 목록 · 대화방 */
+    function dmList() {
+      const D = G.dms || [];
+      const v = h(`<section class="screen ig">
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname">${esc(G.me || "")} ⌄</span><span class="ig-ti">${II.plus}</span></div>
+        <div class="scroll">
+          <div class="ig-search">${II.search}<span>검색</span></div>
+          <div class="ig-dmh"><b>메시지</b><span>요청</span></div>
+          ${D.map((c, i) => `<button class="ig-dmrow${c.unread ? " unread" : ""}" data-dmi="${i}">${avatar(c.id)}<div><b>${esc(c.name || c.id)}</b><small>${esc(c.preview)} · ${esc(c.when)}</small></div>${c.unread ? "<i></i>" : ""}</button>`).join("")}
+          <div style="height:30px"></div>
+        </div>
+      </section>`);
+      v.addEventListener("click", e => {
+        if (e.target.closest("[data-back]")) { back(); return; }
+        const r = e.target.closest("[data-dmi]"); if (!r) return;
+        const c = D[+r.dataset.dmi];
+        if (c.unread) { c.unread = false; r.classList.remove("unread"); r.querySelector("i")?.remove(); }
+        show(dmRoom(c), "push");
+      });
+      return v;
+    }
+    function dmRoom(c) {
+      const body = (c.msgs || []).map(m => m.date ? `<div class="ig-dmdate">${esc(m.date)}</div>` : `<div class="ig-bub ${m.me ? "me" : ""}">${m.me ? "" : avatar(c.id)}<span>${esc(m.text)}</span></div>`).join("");
+      const v = h(`<section class="screen ig">
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button>${avatar(c.id)}<div class="ig-dmt"><b>${esc(c.name || c.id)}</b><small>${esc(c.id)}</small></div></div>
+        <div class="scroll" data-autobottom><div class="ig-dmhead">${avatar(c.id, true)}<b>${esc(c.name || c.id)}</b><small>${esc(c.id)} · Instagram</small></div>${body}${c.status ? `<div class="ig-seen">${esc(c.status)}</div>` : ""}<div style="height:16px"></div></div>
+        <div class="ig-comp"><span>메시지 보내기...</span></div>
       </section>`);
       v.querySelector("[data-back]").onclick = back;
       return v;
@@ -954,6 +986,7 @@
     el.addEventListener("click", e => {
       if (e.target.closest("[data-home]")) { goHome(); return; }
       if (e.target.closest("[data-profile]")) { show(profileView(), "push"); return; }
+      if (e.target.closest("[data-dm]")) { show(dmList(), "push"); return; }
       const b = e.target.closest("[data-like]"); if (!b) return;
       const i = +b.dataset.like, q = G.posts[i]; q.liked = !q.liked;
       b.classList.toggle("on", q.liked);
