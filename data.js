@@ -73,7 +73,7 @@ window.PHONE = {
     ] },
     "+86 000-0000-2741": { lines: [
       { text: "여기는 서울중앙지검 수사관입니다. 강민재 씨 명의 계좌가 범죄에 연루돼서 연락드렸습니다." },
-      { who: "me", text: "어, 저 법률사무소 다니는데요. 우리 변호사님 바꿔드릴까요?" },
+      { who: "me", text: "어, 저 법무법인 다니는데요. 우리 변호사님 바꿔드릴까요?" },
       { text: "…아, 아닙니다." }
     ] },
     "오양훈 사무장님": { lines: [
@@ -156,23 +156,29 @@ window.PHONE = {
 
   /* ---------- 크롬 ---------- */
   chrome: {
-    tabs: 14,
+    tabs: 96,
     /* 자주 방문한 사이트 바로가기 (글자 1개 아이콘) */
     shortcuts: [
-      { label: "증권", letter: "증", color: "#1ec800" },
-      { label: "지도", letter: "지", color: "#03c75a" },
+      { label: "맛집지도", letter: "맛", color: "#ff6b35" },
+      { label: "배달", letter: "🍗", color: "#ffb703" },
+      { label: "웹툰", letter: "툰", color: "#06d6a0" },
+      { label: "러닝기록", letter: "런", color: "#118ab2" },
+      { label: "날씨", letter: "☀", color: "#4cc9f0" },
+      { label: "쇼핑", letter: "쇼", color: "#ef476f" },
       { label: "나의사건검색", letter: "법", color: "#2b5797" },
-      { label: "판례검색", letter: "판", color: "#7a4cc2" },
-      { label: "전자소송", letter: "e", color: "#0b7bd6" },
-      { label: "메일", letter: "M", color: "#ea4335" },
-      { label: "법률신문", letter: "律", color: "#333" },
-      { label: "환율", letter: "₩", color: "#f2a900" }
+      { label: "메일", letter: "M", color: "#ea4335" }
     ],
     /* 최근 검색어 (위가 최신) */
     searches: [
       "교대 맛집 추천",
       "차주한 변호사",
       "강민재 변호사",
+      "프로포즈 멘트 추천",
+      "프로포즈 거절당하면",
+      "프로포즈 노래",
+      "웨딩링 추천",
+      "손가락 호수 몰래 재는법",
+      "말 안 더듬는 법",
       "서울동부지방법원 가는 길",
       "송파구청 민원실 주차"
     ],
