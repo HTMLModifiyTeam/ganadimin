@@ -1425,7 +1425,7 @@
       const t0 = Date.now();
       const draw = () => { const sec = Math.floor((Date.now() - t0) / 1000); tEl.textContent = `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
       draw(); callTimer = setInterval(draw, 1000);
-      runLines(script.lines || [], lineEl, timers, { start: script.lineStart, hangUp: script.hangUpAfter, name }, cut => finish("통화 종료", cut));
+      runLines((tries - rej.length >= 2 && script.again) || script.lines || [], lineEl, timers, { start: script.lineStart, hangUp: script.hangUpAfter, name }, cut => finish("통화 종료", cut));
     }, waitMs));
   }
   function logOutgoing(name) {
