@@ -1104,7 +1104,7 @@
       [[0,0],[0,1],[1,1]], [[0,0],[1,0],[1,1]], [[1,0],[0,1],[1,1]], [[0,0],[1,0],[0,1]]
     ];
     const loadBest = () => { let v = (P.blockblast || {}).best || 0; try { v = Math.max(v, +(localStorage.getItem(KEY) || 0)); } catch (e) {} return v; };
-    let grid, tray, score, best = loadBest(), over;
+    let grid, tray, score, best = loadBest(), over, combo = 0;
     const el = h(`<section class="screen bb" data-dark="1">
       <div class="navbar"><button class="pill round" data-home>${ic.back}</button><b style="font-size:17px;color:#fff">Block Blast</b><span class="pill round" data-reset>↻</span></div>
       <div class="bb-top"><div class="bb-best">👑 <b data-best>${best}</b></div><div class="bb-score" data-score>0</div></div>
@@ -1114,7 +1114,12 @@
     </section>`);
     const boardEl = el.querySelector("[data-board]"), trayEl = el.querySelector("[data-tray]"), cellsEl = [...boardEl.children];
     const rnd = a => a[Math.floor(Math.random() * a.length)];
-    const newPiece = () => ({ s: rnd(SHAPES), c: rnd(COLORS) });
+    // 쉬운 모드: 작은 블록이 더 자주 나오고, 가능하면 지금 판에 놓을 수 있는 블록만 나옴
+    const EASY = SHAPES.filter(s => s.length <= 4);
+    const newPiece = () => {
+      for (let k = 0; k < 30; k++) { const s = Math.random() < .8 ? rnd(EASY) : rnd(SHAPES); if (!grid || canPlace(s)) return { s, c: rnd(COLORS) }; }
+      return { s: [[0, 0]], c: rnd(COLORS) };
+    };
     const dims = s => [Math.max(...s.map(q => q[0])) + 1, Math.max(...s.map(q => q[1])) + 1];
     const fits = (s, x, y) => s.every(([dx, dy]) => { const X = x + dx, Y = y + dy; return X >= 0 && Y >= 0 && X < SZ && Y < SZ && !grid[Y * SZ + X]; });
     const canPlace = s => { for (let y = 0; y < SZ; y++) for (let x = 0; x < SZ; x++) if (fits(s, x, y)) return true; return false; };
@@ -1131,7 +1136,7 @@
       }).join("");
     }
     function reset() {
-      grid = Array(SZ * SZ).fill(null); score = 0; over = false;
+      grid = Array(SZ * SZ).fill(null); score = 0; over = false; combo = 0;
       tray = [newPiece(), newPiece(), newPiece()];
       el.querySelector("[data-over]").hidden = true;
       paint(); drawTray();
@@ -1145,7 +1150,7 @@
     function place(k, x, y) {
       const pc = tray[k];
       pc.s.forEach(([dx, dy]) => { grid[(y + dy) * SZ + x + dx] = pc.c; });
-      score += pc.s.length;
+      score += pc.s.length * 10;
       const full = [];
       for (let r = 0; r < SZ; r++) if ([...Array(SZ).keys()].every(c => grid[r * SZ + c])) for (let c = 0; c < SZ; c++) full.push(r * SZ + c);
       let lines = 0;
@@ -1155,10 +1160,10 @@
       if (tray.every(t => !t)) tray = [newPiece(), newPiece(), newPiece()];
       paint();
       if (lines) {
-        score += lines * 10 * lines;
+        combo++; score += lines * lines * 100 * combo;
         new Set(full).forEach(i => cellsEl[i].classList.add("pop"));
         setTimeout(() => { new Set(full).forEach(i => { grid[i] = null; }); paint(); drawTray(); checkOver(); }, 220);
-      } else { drawTray(); checkOver(); }
+      } else { combo = 0; drawTray(); checkOver(); }
       if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} }
       el.querySelector("[data-score]").textContent = score;
       el.querySelector("[data-best]").textContent = best;
