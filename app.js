@@ -851,7 +851,7 @@
       dm: S('<path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-4.2A8.5 8.5 0 1 1 20.5 11.5z"/><path d="m8 13.5 3-3 2 2 3-3"/>'),
       more: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>`
     };
-    const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(id[0].toUpperCase())}</span>`;
+    const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(((id.match(/[a-z0-9가-힣]/i) || [id[0]])[0]).toUpperCase())}</span>`;
     const story = s => `<div class="ig-story${s.seen ? " seen" : ""}"><div class="ring">${s.me ? avatar(P.insta.me || "me", true) + '<b class="add">+</b>' : avatar(s.id, true)}</div><small>${esc(s.me ? "내 스토리" : s.id)}</small></div>`;
     const post = (q, i, mine) => `<article class="ig-post">
       <header>${avatar(q.id)}<div><b>${esc(q.id)}</b>${q.place ? `<small>${esc(q.place)}</small>` : ""}</div><span class="mo">${II.more}</span></header>
@@ -871,13 +871,63 @@
       </div>
       <nav class="ig-tab">${II.home}${II.search}${II.plus}${II.reels}<button data-profile>${avatar(G.me || "me")}</button></nav>
     </section>`);
+    /* 팔로잉 목록: 맨 위 지정 계정들 + 나머지는 랜덤 이름·아이디 */
+    function followingList() {
+      const M = G.profile || {}, top = M.followingTop || [];
+      const total = parseInt(String(M.following || "0").replace(/,/g, ""), 10) || top.length;
+      const fam = "김이박최정강조윤장임한오서신권황안송류홍", giv = ["서준","하은","도윤","지우","민서","예준","서연","지호","수아","현우","유진","태윤","다은","승민","채원","준혁","소윤","건우","하린","시우","예린","동현","나연","재원"];
+      const parts = ["daily","log","_","official","zip","film","moment","record","pic","seoul"];
+      let seed = 7; const r = n => (seed = (seed * 9301 + 49297) % 233280, Math.floor(seed / 233280 * n));
+      const rom = { "김":"kim","이":"lee","박":"park","최":"choi","정":"jung","강":"kang","조":"cho","윤":"yoon","장":"jang","임":"lim","한":"han","오":"oh","서":"seo","신":"shin","권":"kwon","황":"hwang","안":"ahn","송":"song","류":"ryu","홍":"hong" };
+      const list = top.slice();
+      while (list.length < total) {
+        const f = fam[r(fam.length)], g = giv[r(giv.length)], k = r(4);
+        const id = k === 0 ? `${rom[f]}.${parts[r(parts.length)]}${r(99)}` : k === 1 ? `${parts[r(parts.length)]}_${rom[f]}${r(9)}` : k === 2 ? `__${rom[f]}${r(999)}` : `${rom[f]}_${parts[r(parts.length)]}`;
+        list.push({ id, name: f + g });
+      }
+      return list;
+    }
+    function followingView() {
+      const M = G.profile || {}, list = followingList();
+      const v = h(`<section class="screen ig">
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname" style="flex:1;text-align:center;margin-right:40px">${esc(G.me || "")}</span></div>
+        <div class="ig-ftabs"><span>팔로워 ${esc(M.followers || "0")}</span><span class="on">팔로잉 ${esc(M.following || "0")}</span></div>
+        <div class="scroll">
+          <div class="ig-search">${II.search}<span>검색</span></div>
+          ${list.map((u, i) => `<div class="ig-frow" ${u.profile ? `data-user="${i}"` : ""}>${avatar(u.id)}<div><b>${esc(u.id)}</b><small>${esc(u.name)}</small></div><span class="ig-fbtn">팔로잉</span></div>`).join("")}
+          <div style="height:30px"></div>
+        </div>
+      </section>`);
+      v.addEventListener("click", e => {
+        if (e.target.closest("[data-back]")) { back(); return; }
+        const r = e.target.closest("[data-user]"); if (r) show(userView(list[+r.dataset.user]), "push");
+      });
+      return v;
+    }
+    /* 다른 사람 프로필 (게시물 없는 계정) */
+    function userView(u) {
+      const pf = u.profile || {};
+      const v = h(`<section class="screen ig">
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname">${esc(u.id)}</span><span class="ig-ti">${II.more}</span></div>
+        <div class="scroll">
+          <div class="ig-prof"><div class="ig-pav">${avatar(u.id, true)}</div>
+            <div class="ig-stats"><div><b>0</b><small>게시물</small></div><div><b>${esc(pf.followers || "0")}</b><small>팔로워</small></div><div><b>${esc(pf.following || "0")}</b><small>팔로잉</small></div></div></div>
+          <div class="ig-bio"><b>${esc(u.name)}</b></div>
+          <div class="ig-btns"><span>팔로잉 ⌄</span><span>메시지</span></div>
+          <div class="ig-gtabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17M14.5 3.5v17"/></svg></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1-3 3.2-4.5 5.5-4.5s4.5 1.5 5.5 4.5"/></svg></span></div>
+          <div class="ig-empty"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></i><b>게시물 없음</b></div>
+        </div>
+      </section>`);
+      v.querySelector("[data-back]").onclick = back;
+      return v;
+    }
     function profileView() {
       const M = G.profile || {}, list = M.posts || [];
       const v = h(`<section class="screen ig">
         <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname">${esc(G.me || "")}</span><span class="ig-ti">${II.plus}${II.more}</span></div>
         <div class="scroll">
           <div class="ig-prof"><div class="ig-pav">${avatar(G.me || "me", true)}</div>
-            <div class="ig-stats"><div><b>${list.length}</b><small>게시물</small></div><div><b>${esc(M.followers || "0")}</b><small>팔로워</small></div><div><b>${esc(M.following || "0")}</b><small>팔로잉</small></div></div></div>
+            <div class="ig-stats"><div><b>${list.length}</b><small>게시물</small></div><div><b>${esc(M.followers || "0")}</b><small>팔로워</small></div><div data-following><b>${esc(M.following || "0")}</b><small>팔로잉</small></div></div></div>
           <div class="ig-bio"><b>${esc(M.name || "")}</b><p>${esc(M.bio || "")}</p></div>
           <div class="ig-btns"><span>프로필 편집</span><span>프로필 공유</span></div>
           <div class="ig-gtabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 3.5v17M14.5 3.5v17"/></svg></span><span>${II.reels}</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1-3 3.2-4.5 5.5-4.5s4.5 1.5 5.5 4.5"/></svg></span></div>
@@ -888,6 +938,7 @@
       </section>`);
       v.addEventListener("click", e => {
         if (e.target.closest("[data-back]")) { back(); return; }
+        if (e.target.closest("[data-following]")) { show(followingView(), "push"); return; }
         const t = e.target.closest("[data-mine]"); if (!t) return;
         const i = +t.dataset.mine;
         const pv = h(`<section class="screen ig">

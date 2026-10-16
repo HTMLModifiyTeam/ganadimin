@@ -632,6 +632,8 @@ window.PHONE = {
     /* 오른쪽 아래 프로필을 누르면 보이는 민재 피드 (위에서부터 최신순) */
     profile: {
       name: "강민재", followers: "192", following: "103",
+      /* 팔로잉 목록 맨 위 (profile 이 있으면 눌러서 들어갈 수 있음). 나머지는 랜덤으로 채워짐 */
+      followingTop: [ { id: "chajuha_n", name: "차주한", profile: { followers: "21", following: "0" } } ],
       bio: "변호사 👨‍⚖️ | 🏃‍♂️ 러닝 | 맛집 탐방 중 🍚",
       posts: [
         { bg: "linear-gradient(160deg,#ffd194,#d1913c)", emoji: "🥓", place: "대박집", likes: 128, comments: 14, when: "2일 전", caption: "금요일엔 역시 대박집 회식 🥩 사장님 삼겹살 최고!! #회식 #삼겹살맛집" },
