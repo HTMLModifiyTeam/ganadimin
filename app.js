@@ -345,7 +345,7 @@
       <div class="kk-top"><h2>채팅</h2><div class="icons">${ic.search}<svg viewBox="0 0 24 24"><path d="M12 4c-4.4 0-8 2.9-8 6.5 0 2.3 1.5 4.3 3.7 5.5L7 20l3.6-2.4c.5.1.9.1 1.4.1 4.4 0 8-2.9 8-6.5S16.4 4 12 4z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg></div></div>
       <div class="kk-chips"><span class="on">전체</span><span>💬 <em data-kbadge>${P.badges.kakao}</em></span><span>ChatGPT</span><span style="color:#2fbf4a">✆</span></div>
       <div class="scroll">
-        ${K.ad ? `<div class="kk-ad"><div><small>${esc(K.ad.label)} ›</small><b>${esc(K.ad.title)}</b><span>${esc(K.ad.sub)}</span></div><div class="${K.ad.icon === "book" ? "kbook" : "bottle"}"></div></div>` : ""}
+        ${K.ad ? `<div class="kk-ad"><div><small>${esc(K.ad.label)} ›</small><b>${esc(K.ad.title)}</b><span>${esc(K.ad.sub)}</span></div><div class="${K.ad.icon === "book" ? "kbook" : K.ad.icon === "coat" ? "kcoat" : "bottle"}"></div></div>` : ""}
         <div data-list>${K.chats.map(c => row(c)).join("")}</div>
       </div>
       <nav class="kk-tab">
