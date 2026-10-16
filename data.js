@@ -665,15 +665,15 @@ window.PHONE = {
       { id: "cafe.hopper_" }, { id: "hanriver_runner" }, { id: "mung.daily" }, { id: "seoul_foodie.log" }, { id: "jjj.travel", seen: true }, { id: "yoonbakes", seen: true }
     ],
     posts: [
-      { id: "seoul_foodie.log", place: "서초구, 서울", bg: "linear-gradient(160deg,#f6d365,#fda085)", emoji: "🍲", likes: 1284, comments: 46, when: "1시간 전",
+      { id: "seoul_foodie.log", verified: true, follow: true, music: "잔나비 · 주저하는 연인들을 위해", bg: "linear-gradient(160deg,#f6d365,#fda085)", emoji: "🍲", likes: 1284, comments: 46, when: "1시간 전",
         caption: "비 오는 날엔 역시 뜨끈한 국물 🥹 교대역 3분 거리, 웨이팅 20분 각오하세요 #교대맛집 #국밥" },
       { id: "hanriver_runner", place: "반포한강공원", bg: "linear-gradient(180deg,#ff9a8b 0%,#ff6a88 45%,#2b2d5c 100%)", emoji: "🏃‍♂️", likes: 532, comments: 12, when: "3시간 전",
         caption: "오늘도 10km 완료. 노을 보면서 뛰는 게 제일 좋음 🌇 #러닝 #한강러닝 #오운완" },
       { id: "mung.daily", bg: "linear-gradient(160deg,#fbe9d7,#f6d5b8)", emoji: "🐈", likes: 8920, comments: 213, when: "5시간 전",
         caption: "집사 퇴근 기다리다 잠든 사람 있다? 있다 😴 #고양이 #냥스타그램" },
-      { id: "cafe.hopper_", place: "성수동", bg: "linear-gradient(160deg,#e0c3a0,#8d6e63)", emoji: "☕️", likes: 764, comments: 28, when: "8시간 전",
+      { id: "cafe.hopper_", music: "아이유 · 가을 아침", bg: "linear-gradient(160deg,#e0c3a0,#8d6e63)", emoji: "☕️", likes: 764, comments: 28, when: "8시간 전",
         caption: "가을 시즌 메뉴 밤라떼 개시 🌰 창가 자리 햇살 맛집 #성수카페 #카페투어" },
-      { id: "jjj.travel", place: "강릉", bg: "linear-gradient(180deg,#a1c4fd 0%,#c2e9fb 55%,#e6d3a3 100%)", emoji: "🌊", likes: 2051, comments: 64, when: "1일 전",
+      { id: "jjj.travel", follow: true, place: "강릉", bg: "linear-gradient(180deg,#a1c4fd 0%,#c2e9fb 55%,#e6d3a3 100%)", emoji: "🌊", likes: 2051, comments: 64, when: "1일 전",
         caption: "주말 당일치기 강릉 바다 🌊 커피거리도 꼭 가보세요 #강릉 #국내여행" }
     ]
   },

@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162322") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610162340") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -801,3 +801,25 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ig-bub.me span{background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff}
 .ig-seen{text-align:right;font-size:12px;color:#737373;padding:4px 16px 0}
 .ig-comp{margin:8px 12px 30px;padding:11px 16px;border-radius:24px;background:#efefef;color:#8e8e8e;font-size:15px;flex:none}
+
+/* 인스타 새 레이아웃 (라이트 모드) */
+.ig .scroll{padding-bottom:84px}
+.ig-main{padding-top:50px}
+.ig-plus{width:40px;display:flex;justify-content:flex-start;padding-left:6px}
+.ig-plus svg{width:28px;height:28px}
+.ig-main .ig-logo{text-align:center;font-size:32px}
+.ig-main .ig-logo small{font-family:system-ui;font-size:16px;vertical-align:middle;color:#262626}
+.ig-main .ig-ti{width:40px;justify-content:flex-end}
+.ig-ring{padding:2px;border-radius:50%;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);display:flex}
+.ig-ring .ig-av{width:34px;height:34px;border:2px solid #fff;box-sizing:content-box}
+.ig-post header b{display:flex;align-items:center;gap:4px}
+.ig-ver{width:15px;height:15px}
+.ig-post header small{display:flex;align-items:center;gap:4px}
+.ig-note{width:12px;height:12px}
+.ig-follow{background:#efefef;border-radius:8px;padding:6px 14px;font-size:13.5px;font-weight:600;margin-right:6px}
+.ig-tab{position:absolute;left:14px;right:14px;bottom:26px;height:62px;padding:0 6px;border:none;border-radius:32px;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 4px 24px rgba(0,0,0,.12),inset 0 0 0 1px rgba(0,0,0,.05);justify-content:space-between;z-index:4}
+.ig-tab>*{flex:1;height:50px;display:flex;align-items:center;justify-content:center;position:relative;border-radius:26px}
+.ig-tab>.on{background:rgba(0,0,0,.07)}
+.ig-tab>.on svg{fill:#000;stroke-width:2}
+.ig-tab>.dot:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#ff3040;right:calc(50% - 16px);bottom:10px;box-shadow:0 0 0 2px #fff}
+.ig-tab .me-on .ig-av{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #000}
