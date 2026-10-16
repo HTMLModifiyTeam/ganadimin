@@ -169,7 +169,7 @@
     return `<button class="app" data-app="${id}"><div class="ic">${(P.icons || {})[id] ? `<img src="${esc(P.icons[id])}" alt="">` : I[id]}</div>${b ? `<em class="badge" data-badge="${id}">${b}</em>` : ""}<span>${esc(label)}</span></button>`;
   };
   function homeScreen() {
-    const el = h(`<section class="screen home" data-dark="1">
+    const el = h(`<section class="screen home" data-dark="0">
       <button class="back-to-book" data-close>‹ 본문으로</button>
       <div class="grid">${widgetHTML()}${apps.map(appBtn).join("")}</div>
       <div class="spot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>검색</div>
