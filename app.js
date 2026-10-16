@@ -449,7 +449,9 @@
     el.dataset.room = name;
     el.querySelector("[data-back]").onclick = back;
     wireComposer(el, typed => {
-      const SC = (P.kakao.scripted || {})[name];
+      let SC = (P.kakao.scripted || {})[name];
+      if (SC && SC.once && SC.used) SC = null;
+      if (SC) SC.used = true;
       (SC ? SC.send : [typed]).forEach(text => {
       const todayLabel = `${TODAY.getFullYear()}년 ${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 ${WD[TODAY.getDay()]}요일`;
       const lastDate = [...msgs].reverse().find(m => m.date);
@@ -473,6 +475,12 @@
       // 자동 답장
       const norm = t => t.replace(/[\s.!?~…]+/g, "");
       const rule = ((K.autoReplies || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));
+      const callRule = ((K.callTriggers || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));
+      if (callRule) {
+        setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
+        setTimeout(() => { if (!callEl) incomingCall(callRule.call); }, callRule.delay || 2500);
+        return;
+      }
       if (rule) {
         let wait = 1400;
         setTimeout(() => {   // 읽음 표시(1) 없애기
@@ -1305,8 +1313,8 @@
     later: `<svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4.3h-3" stroke="#3f4a3f" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M4 6.5l3-2.6M20 6.5l-3-2.6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
     msg: `<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 4C6.8 4 3 7.3 3 11.2c0 2.2 1.2 4.2 3.2 5.5-.2 1.3-.9 2.5-1.9 3.3 2 .1 3.8-.6 5.1-1.7.8.2 1.7.3 2.6.3 5.2 0 9-3.3 9-7.4S17.2 4 12 4z"/></svg>`
   };
-  function incomingCall() {
-    const C = P.incomingCall || {};
+  function incomingCall(cfg) {
+    const C = cfg || P.incomingCall || {};
     const name = C.from || "강민재";
     hideBanner();
     callEl = h(`<div class="callui">
