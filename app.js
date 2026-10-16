@@ -742,6 +742,19 @@
 
 
   /* ================= 시계 ================= */
+  /* 타이머가 끝나면: 알림 + 알림음 → 잠시 뒤 정해진 링크로 이동 (다른 앱을 보고 있어도 작동) */
+  let timerDone = null;
+  function armTimer(ms) {
+    clearTimeout(timerDone); timerDone = null;
+    if (ms == null) return;
+    timerDone = setTimeout(() => {
+      const C = P.clock || {}, T = C._timer; if (T) T.running = false;
+      try { msgTone(); setTimeout(msgTone, 400); setTimeout(msgTone, 800); } catch (e) {}
+      showBanner({ app: "시계", from: "타이머", text: "타이머가 끝났습니다" });
+      const link = (C.timer || {}).link;
+      if (link) setTimeout(() => { window.location.href = link; }, 1500);
+    }, Math.max(0, ms));
+  }
   function clockApp() {
     const C = P.clock || {};
     const tabs = [
@@ -853,12 +866,12 @@
         return;
       }
       if (e.target.closest("[data-ts]")) {
-        if (!T.running) { const tot = (T.h * 3600 + T.m * 60 + T.s) * 1000; if (!tot) return; T.total = tot; T.end = Date.now() + tot; T.running = true; T.paused = false; }
-        else if (T.paused) { T.end = Date.now() + T.left; T.paused = false; }
-        else { T.left = tLeft(); T.paused = true; }
+        if (!T.running) { const tot = (T.h * 3600 + T.m * 60 + T.s) * 1000; if (!tot) return; T.total = tot; T.end = Date.now() + tot; T.running = true; T.paused = false; armTimer(T.end - Date.now()); }
+        else if (T.paused) { T.end = Date.now() + T.left; T.paused = false; armTimer(T.left); }
+        else { T.left = tLeft(); T.paused = true; armTimer(null); }
         render("timer"); return;
       }
-      if (e.target.closest("[data-tc]") && T.running) { T.running = false; T.paused = false; render("timer"); }
+      if (e.target.closest("[data-tc]") && T.running) { T.running = false; T.paused = false; armTimer(null); render("timer"); }
     });
     render(C.startTab || "alarm");
     return el;

@@ -700,7 +700,9 @@ window.PHONE = {
       { city: "타이베이", offset: 8 },
       { city: "호놀룰루", offset: -10 }
     ],
-    timer: { h: 0, m: 9, s: 0, sound: "공지음" },
+    timer: { h: 0, m: 9, s: 0, sound: "공지음",
+      /* 타이머가 끝나면 이동하는 링크 */
+      link: "https://www.youtube.com/results?search_query=%EB%B9%A0%EC%82%90%EC%BD%94+%EB%A6%AC%EB%AF%B9%EC%8A%A4" },
     timerRecent: ["9분", "30분", "1시간"]
   },
 
