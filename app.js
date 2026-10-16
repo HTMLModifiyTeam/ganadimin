@@ -474,8 +474,9 @@
       }
       // 자동 답장
       const norm = t => t.replace(/[\s.!?~…]+/g, "");
-      const rule = ((K.autoReplies || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));
-      const callRule = ((K.callTriggers || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));
+      const hit = r => r.match.some(m => r.contains ? norm(text).includes(norm(m)) : norm(m) === norm(text));
+      const rule = ((K.autoReplies || {})[name] || []).find(hit);
+      const callRule = ((K.callTriggers || {})[name] || []).find(hit);
       if (callRule) {
         setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
         setTimeout(() => { if (!callEl) incomingCall(callRule.call); }, callRule.delay || 2500);

@@ -26,17 +26,8 @@ window.PHONE = {
   time: "11:59:30",            // 휴대폰을 처음 연 순간의 시각(시:분:초). 이후 실제 시간만큼 흘러가요
   passcode: "",                // 잠금화면 암호. 비워두면 아무 숫자 4자리나 눌러도 열려요 (예: "1201")
   /* 잠금 해제 후 휴대폰 속 시간이 afterMinutes분 흐르면 걸려오는 전화 (받아도 소리는 나지 않아요) */
-  incomingCall: {
-    from: "강민재", afterMinutes: 3, ringSeconds: 30,
-    /* 전화를 받으면 화면에 차례대로 뜨는 대사 (ms = 보여주는 시간, 1000 = 1초). 마지막 대사 뒤 전화가 끊겨요 */
-    lineStart: 1100,      // 받고 1.1초 뒤 첫 대사
-    hangUpAfter: 900,     // 마지막 대사가 사라지고 0.9초 뒤 끊김
-    lines: [
-      { text: "변호사님, 저 지하에요", ms: 2800 },
-      { text: "어서 내려오세요!", ms: 2800 },
-      { text: "사랑해요", ms: 3000 }
-    ]
-  },
+  incomingCall: null,
+
 
   /* 통화 기록에서 눌러 거는 전화의 대화 (who: "me" = 차주한, 없으면 상대방)
      answer: 받을 확률 (1 = 무조건), 없으면 answerRate 사용 */
@@ -422,13 +413,13 @@ window.PHONE = {
       {"name": "정다은", "preview": "민재야, 오랜만이야! 나 보험 일 시작했는데 한번 만나자 ㅎㅎ", "when": "10월 14일", "unread": 1},
       {"name": "카카오페이", "preview": "강민재님, 10월 결제 리포트가 도착했어요 📊", "when": "10월 13일", "unread": 1, "channel": true}
     ],
-    /* 대화방에서 이 말을 보내면 돌아오는 답장 (마침표·띄어쓰기는 무시) */
+    /* 대화방에서 이 말을 보내면 돌아오는 답장 (마침표·띄어쓰기는 무시, contains: 문장 안에 들어 있기만 해도 작동) */
     autoReplies: {
-      "변호사님❤️": [ { match: ["사랑해요"], replies: ["나도."] } ]
+      "변호사님❤️": [ { contains: true, match: ["사랑"], replies: ["나도."] } ]
     },
     /* 이 말을 보내면 상대에게서 전화가 걸려옴 */
     callTriggers: {
-      "변호사님❤️": [ { match: ["주한이 형", "주한이형"], delay: 2500, call: {
+      "변호사님❤️": [ { contains: true, match: ["형"], delay: 2500, call: {
         from: "변호사님❤️", ringSeconds: 30, lineStart: 1100, hangUpAfter: 900,
         lines: [
           { text: "이제 아주 내가 편해졌나 봐?" },
