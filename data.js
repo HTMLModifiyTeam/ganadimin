@@ -42,12 +42,35 @@ window.PHONE = {
      answer: 받을 확률 (1 = 무조건), 없으면 answerRate 사용 */
   callScripts: {
     answerRate: 1,        // 1 = 항상 받음
-    "강민재": { answer: 1, lines: [
-      { text: "변호사님! 먼저 전화를 다 주시고요." },
-      { who: "me", text: "어디야." },
-      { text: "거의 다 왔어요! 5분이면 도착해요." },
-      { who: "me", text: "응. 천천히 와." },
-      { text: "네! 이따 봬요, 변호사님." }
+    "차주한": { lines: [
+      { text: "왜." },
+      { who: "me", text: "변호사님! 그냥 목소리 듣고 싶어서요." },
+      { text: "용건 없으면 끊는다." },
+      { who: "me", text: "아 잠깐만요! 오늘 저녁 뭐 드실래요?" },
+      { text: "…알아서 해." },
+      { who: "me", text: "네! 맛있는 거 사 갈게요." }
+    ] },
+    "새벽경제 김도윤 기자": { lines: [
+      { text: "새벽경제 김도윤입니다. 차주한 변호사님 사무실 분 맞으시죠?" },
+      { who: "me", text: "네? 아… 맞긴 한데요." },
+      { text: "혹시 변호사님 근황 한 말씀만—" },
+      { who: "me", text: "죄송합니다~ 끊을게요!" }
+    ] },
+    "070-0000-3158": { lines: [
+      { text: "안녕하세요 고객님~ 저금리 대환대출 상품 안내드리려고 연락드렸습니다." },
+      { who: "me", text: "아 괜찮아요~ 필요 없어요!" },
+      { text: "잠시만요 고객님, 지금 한도가—" }
+    ] },
+    "1661-0000": { lines: [
+      { text: "고객님, 택배 주소지 확인이 필요해서 연락드렸습니다." },
+      { who: "me", text: "어? 저 택배 시킨 거 없는데요?" },
+      { text: "아… 네, 그럼 링크로 확인을—" },
+      { who: "me", text: "안 눌러요~" }
+    ] },
+    "+86 000-0000-2741": { lines: [
+      { text: "여기는 서울중앙지검 수사관입니다. 강민재 씨 명의 계좌가 범죄에 연루돼서 연락드렸습니다." },
+      { who: "me", text: "어, 저 법률사무소 다니는데요. 우리 변호사님 바꿔드릴까요?" },
+      { text: "…아, 아닙니다." }
     ] },
     "오양훈 사무장님": { lines: [
       { text: "네, 변호사님." },
@@ -55,15 +78,6 @@ window.PHONE = {
       { text: "책상 위에 올려둔 거요? 내일 아침에 다시 챙겨 놓겠습니다." },
       { who: "me", text: "감사합니다." },
       { text: "들어가세요, 변호사님." }
-    ] },
-    "이세화": { lines: [
-      { text: "차 변이랑 통화 한 번 하기가 이렇게 힘들어서야." },
-      { who: "me", text: "바빴습니다." },
-      { text: "근데 웬일로 차 변이 먼저 전화를 다 걸었어요? 해가 서쪽에서 뜨겠네." },
-      { who: "me", text: "부재중이 세 통이나 찍혀 있어서요." },
-      { text: "어머, 세어 보기도 했어요? 감동인데." },
-      { who: "me", text: "용건 없으시면 끊겠습니다." },
-      { text: "농담이에요, 농담. 나중에 얼굴 보고 식사나 한번 해요." }
     ] },
     "최종현": { lines: [
       { text: "으음… 여보세요…?" },
@@ -84,46 +98,13 @@ window.PHONE = {
       { text: "응. 바쁠 텐데 들어가 봐. 밥 잘 챙겨 먹고." },
       { who: "me", text: "네. 다음에 또 연락드릴게요." }
     ] },
-    "한결일보 오지현 기자": { lines: [
-      { text: "변호사님! 한결일보 오지현입니다. 연락 주셔서 감사합니다." },
-      { who: "me", text: "코멘트는 사무실 공식 입장으로 대신하겠습니다." },
-      { text: "아, 그래도 한 말씀만이라도…" },
-      { who: "me", text: "죄송합니다. 끊겠습니다." }
-    ] },
-    "KNS 박태준 기자": { lines: [
-      { text: "KNS 박태준입니다! 잠깐 녹취 가능하실까요?" },
-      { who: "me", text: "인터뷰는 정중히 사양하겠습니다." },
-      { text: "그럼 짧게 입장만이라도—" },
-      { who: "me", text: "사무실로 연락 주세요." }
-    ] },
-    "새벽경제 김도윤 기자": { lines: [
-      { text: "새벽경제 김도윤입니다. 카톡 보셨을까요?" },
-      { who: "me", text: "봤습니다. 따로 드릴 말씀은 없습니다." },
-      { text: "아… 네, 알겠습니다." }
-    ] },
-    "070-0000-4821": { lines: [
-      { text: "안녕하세요 고객님~ 저금리 대환대출 상품 안내드리려고 연락드렸습니다." },
-      { who: "me", text: "필요 없습니다." },
-      { text: "잠시만요 고객님, 지금 한도가—" }
-    ] },
-    "02-0000-1937": { lines: [
-      { text: "카드 고객센터입니다. 고객님 카드가 해외에서 결제 시도되어…" },
-      { who: "me", text: "그런 카드 안 씁니다." },
-      { text: "확인차 주민번호 앞자리를—" },
-      { who: "me", text: "끊겠습니다." }
-    ] },
-    "+1 (000) 555-0142": { lines: [
-      { text: "여기는 서울중앙지검 수사관입니다. 차주한 씨 명의 계좌가 범죄에 연루돼서 연락드렸습니다." },
-      { who: "me", text: "하아… 어느 검사실이요." },
-      { text: "그, 금융범죄수사부 검사실인데요. 지금 바로 보안 계좌로 자금을 옮기셔야—" },
-      { who: "me", text: "하아... 끊습니다." }
-    ] },
     "기본": { lines: [
       { text: "여보세요?" },
       { who: "me", text: "차주한입니다." },
       { text: "아, 네. 말씀하세요." }
     ] }
   },
+  owner: "강민재",              // 휴대폰 주인 (통화 대사에서 내 이름으로 표시)
   today: "2026-10-18",
   /* 앱 아이콘을 직접 고른 이미지로 바꾸기
      img 폴더에 이미지(정사각형 png/jpg 권장)를 넣고 "img/파일명.png" 로 적으세요.
@@ -133,7 +114,7 @@ window.PHONE = {
     notes: "", mail: "", weather: "", insta: "", blockblast: "", mines: "",
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
-  badges: { phone: 8, mail: 2, messages: 3, kakao: 12 },
+  badges: { phone: 2, mail: 2, messages: 3, kakao: 12 },
 
   /* 프로필 사진 (비우면 기본 아이콘) */
   avatars: {
@@ -145,31 +126,23 @@ window.PHONE = {
   /* ---------- 전화: 최근 통화 ---------- */
   /* dir: in(받은) / out(건) · missed: true → 빨간색(부재중) · count: 연속 통화 횟수 */
   calls: [
-    { name: "이세화", count: 2, kind: "휴대전화", dir: "in", missed: true, when: "11:10" },
-    { name: "강민재", kind: "휴대전화", dir: "out", when: "10:48" },
-    { name: "오양훈 사무장님", kind: "휴대전화", dir: "in", when: "10:05" },
-    { name: "강민재", count: 2, kind: "휴대전화", dir: "in", when: "09:30" },
-    { name: "070-0000-4821", kind: "<스팸의심>", dir: "in", missed: true, when: "09:02" },
-    { name: "어머니", kind: "휴대전화", dir: "in", missed: true, when: "08:45" },
-    { name: "오양훈 사무장님", count: 3, kind: "휴대전화", dir: "out", when: "08:20" },
-    { name: "강민재", kind: "휴대전화", dir: "in", when: "08:02" },
-    { name: "한결일보 오지현 기자", count: 3, kind: "휴대전화", dir: "in", missed: true, when: "01:10" },
-    { name: "KNS 박태준 기자", kind: "휴대전화", dir: "in", missed: true, when: "00:40" },
-    { name: "강민재", kind: "휴대전화", dir: "out", when: "어제" },
-    { name: "오양훈 사무장님", kind: "휴대전화", dir: "in", when: "어제" },
-    { name: "이세화", kind: "휴대전화", dir: "in", missed: true, when: "어제" },
-    { name: "새벽경제 김도윤 기자", kind: "휴대전화", dir: "in", missed: true, when: "어제" },
-    { name: "02-0000-1937", kind: "<스팸의심>", dir: "in", missed: true, when: "어제" },
-    { name: "장태식", kind: "휴대전화", dir: "in", when: "어제" },
-    { name: "강민재", count: 3, kind: "휴대전화", dir: "in", when: "금요일" },
-    { name: "오양훈 사무장님", kind: "휴대전화", dir: "out", when: "금요일" },
-    { name: "어머니", kind: "휴대전화", dir: "in", when: "목요일" },
-    { name: "최종현", kind: "휴대전화", dir: "out", when: "목요일" },
-    { name: "강민재", kind: "휴대전화", dir: "out", when: "목요일" },
-    { name: "오양훈 사무장님", count: 2, kind: "휴대전화", dir: "in", when: "수요일" },
-    { name: "+1 (000) 555-0142", kind: "<스팸의심>", dir: "in", missed: true, when: "수요일" },
-    { name: "강민재", kind: "휴대전화", dir: "in", when: "화요일" },
-    { name: "오양훈 사무장님", kind: "휴대전화", dir: "out", when: "월요일" }
+    { name: "차주한", count: 2, kind: "휴대전화", dir: "out", when: "11:41" },
+    { name: "070-0000-3158", kind: "<스팸의심>", dir: "in", missed: true, when: "11:02" },
+    { name: "최종현", kind: "휴대전화", dir: "in", when: "10:37" },
+    { name: "차주한", kind: "휴대전화", dir: "in", when: "09:58" },
+    { name: "장태식", kind: "휴대전화", dir: "out", when: "09:12" },
+    { name: "오양훈 사무장님", kind: "휴대전화", dir: "in", missed: true, when: "08:50" },
+    { name: "차주한", kind: "휴대전화", dir: "out", when: "08:03" },
+    { name: "1661-0000", kind: "<스팸의심>", dir: "in", missed: true, when: "어제" },
+    { name: "어머니", kind: "휴대전화", dir: "out", when: "어제" },
+    { name: "차주한", count: 2, kind: "휴대전화", dir: "in", when: "어제" },
+    { name: "새벽경제 김도윤 기자", kind: "휴대전화", dir: "in", missed: true, when: "금요일" },
+    { name: "장태식", kind: "휴대전화", dir: "in", when: "금요일" },
+    { name: "차주한", kind: "휴대전화", dir: "out", when: "목요일" },
+    { name: "+86 000-0000-2741", kind: "<스팸의심>", dir: "in", missed: true, when: "수요일" },
+    { name: "최종현", kind: "휴대전화", dir: "out", when: "수요일" },
+    { name: "오양훈 사무장님", kind: "휴대전화", dir: "out", when: "화요일" },
+    { name: "차주한", kind: "휴대전화", dir: "in", when: "월요일" }
   ],
 
   /* ---------- 크롬 ---------- */

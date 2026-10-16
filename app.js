@@ -1055,7 +1055,7 @@
   function runLines(lines, lineEl, timers, o, onEnd) {
     if (!lines.length) return;
     const showWho = o.showWho ?? lines.some(l => l.who === "me");
-    const label = l => showWho ? `<small>${l.who === "me" ? "차주한" : esc(o.name)}</small>` : "";
+    const label = l => showWho ? `<small>${l.who === "me" ? esc(P.owner || "차주한") : esc(o.name)}</small>` : "";
     let at = o.start ?? 1100;
     for (const l of lines) {
       if (l.cut) {
