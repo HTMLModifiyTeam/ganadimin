@@ -448,7 +448,9 @@
     </section>`);
     el.dataset.room = name;
     el.querySelector("[data-back]").onclick = back;
-    wireComposer(el, text => {
+    wireComposer(el, typed => {
+      const SC = (P.kakao.scripted || {})[name];
+      (SC ? SC.send : [typed]).forEach(text => {
       const todayLabel = `${TODAY.getFullYear()}년 ${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 ${WD[TODAY.getDay()]}요일`;
       const lastDate = [...msgs].reverse().find(m => m.date);
       const needDate = !lastDate || lastDate.date !== todayLabel;
@@ -460,6 +462,14 @@
       if (c) K.chats.splice(K.chats.indexOf(c), 1); else c = { name };
       Object.assign(c, { preview: text, when: P.time, unread: 0 }); kTop(c);
       if (kakaoList && kakaoList.el.isConnected) { const list = kakaoList.el.querySelector("[data-list]"); list.querySelector(`[data-room="${CSS.escape(name)}"]`)?.remove(); kPrepend(list, h(kakaoList.row(c)), c); }
+      });
+      const K = P.kakao, text = typed;
+      // 정해진 대화: 무엇을 보내도 위 문장이 전송되고, 답장은 목록 중 하나가 랜덤
+      if (SC) {
+        setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
+        setTimeout(() => deliverKakao(name, SC.replies[Math.floor(Math.random() * SC.replies.length)]), 1800);
+        return;
+      }
       // 자동 답장
       const norm = t => t.replace(/[\s.!?~…]+/g, "");
       const rule = ((K.autoReplies || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));

@@ -423,6 +423,10 @@ window.PHONE = {
       {"name": "카카오페이", "preview": "강민재님, 10월 결제 리포트가 도착했어요 📊", "when": "10월 13일", "unread": 1, "channel": true}
     ],
     autoReplies: {},
+    /* 이 방에서는 무엇을 입력해도 send 문장들이 전송되고, 답장은 replies 중 하나가 랜덤 */
+    scripted: {
+      "변호사님❤️": { send: ["오늘 데이트 안 잊으셨죠?", "따뜻하게 입고 오세요. 데리러 갈게요! 🧣"], replies: ["응.", "그래.", "알겠어.", "곧 봐."] }
+    },
     notification: null,
     rooms: {
       "변호사님❤️": [
