@@ -28,7 +28,7 @@ window.PHONE = {
   /* 잠금 해제 후 휴대폰 속 시간이 afterMinutes분 흐르면 걸려오는 전화 (받아도 소리는 나지 않아요) */
   incomingCall: null,
   /* 키패드에서 아무 숫자나 누르면 한 자리씩 입력되는 번호 */
-  keypadNumber: "010-0617-1201",
+  keypadNumber: "011-617-1201",
 
 
   /* 통화 기록에서 눌러 거는 전화의 대화 (who: "me" = 차주한, 없으면 상대방)
@@ -58,7 +58,7 @@ window.PHONE = {
         { who: "me", text: "헉… 넵! 저 달려갈게요!!" },
         { text: "과속하지 말고—", cut: true }
       ] },
-    "010-0617-1201": { answer: 1, answerAfter: 5000, lines: [
+    "011-617-1201": { answer: 1, answerAfter: 5000, deadAfterOnce: true, deadText: "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", lines: [
       { who: "me", text: "누구세요?" },
       { text: "……", ms: 3000 },
       { who: "me", text: "…여보세요?" },
@@ -231,6 +231,8 @@ window.PHONE = {
   /* ---------- 메시지(iMessage) ---------- */
   messages: {
     pinned: "",
+    /* 이 대화방에 답장하면 그 번호에서 전화가 걸려옴 (대사는 callScripts 와 같음) */
+    replyCall: { "011-617-1201": { delay: 3000 } },
     threads: [
       { name: "새벽경제 김도윤 기자", preview: "변호사님, 편하실 때 짧게라도 회신 부탁드립니다.", when: "11:20", unread: true, sms: true },
       { name: "대박집 사장님", preview: "금요일에 봬요! 조심히 다니시고요.", when: "10:42", sms: true },
@@ -243,10 +245,10 @@ window.PHONE = {
       { name: "한진택배", preview: "[한진택배] 상품이 문 앞에 배송 완료되었습니다.", when: "수요일", sms: true },
       { name: "070-0000-2290", preview: "(광고) 수익률 300%! 무료 주식 리딩방 입장 ▶", when: "화요일", sms: true },
       { name: "롯데택배", preview: "[롯데택배] 배송 완료되었습니다. (문 앞)", when: "2026. 10. 10.", sms: true },
-      { name: "010-0617-1201", preview: ".", when: "2026. 6. 17.", sms: true }
+      { name: "011-617-1201", preview: ".", when: "2026. 6. 17.", sms: true }
     ],
     chats: {
-      "010-0617-1201": [
+      "011-617-1201": [
         { date: "6월 17일 (수) 오전 3:33" },
         { text: "." }
       ],

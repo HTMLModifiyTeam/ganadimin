@@ -378,6 +378,12 @@
       if (th) M.threads.splice(M.threads.indexOf(th), 1); else th = { name, sms };
       Object.assign(th, { preview: text, when: P.time, unread: false }); M.threads.unshift(th);
       if (messagesListEl && messagesListEl.isConnected) messagesListEl.querySelector("[data-threads]").innerHTML = threadsHTML();
+      // 답장하면 그 번호에서 먼저 전화가 옴 (한 번만)
+      const RC = (P.messages.replyCall || {})[name], cs = (P.callScripts || {})[name];
+      if (RC && cs && !cs._used && !RC._fired) {
+        RC._fired = true;
+        setTimeout(() => { if (!callEl) incomingCall({ from: name, ringSeconds: 30, lineStart: 1100, hangUpAfter: 900, lines: cs.lines, onAnswer: () => { cs._used = true; } }); }, RC.delay || 3000);
+      }
     });
     return el;
   }
@@ -1429,8 +1435,10 @@
       draw(); callTimer = setInterval(draw, 1000);
       callEl.querySelectorAll('[data-key="mute"],[data-key="audio"]').forEach(k => k.onclick = () => k.classList.toggle("on"));
       const lineEl = callEl.querySelector("[data-line]"), timers = [];
-      const endCall = () => { timers.forEach(clearTimeout); clearInterval(callTimer); lineEl.classList.remove("show"); logCall(name, false); tEl.textContent = "통화 종료"; setTimeout(closeCall, 900); };
-      callEl.querySelector("[data-end]").onclick = endCall;
+      let ended = false;
+      const endCall = (cut, lab) => { if (ended) return; ended = true; timers.forEach(clearTimeout); clearInterval(callTimer); if (cut !== true) lineEl.classList.remove("show"); logCall(name, false); tEl.textContent = lab || "통화 종료"; setTimeout(closeCall, cut === true ? 1600 : 900); };
+      callEl.querySelector("[data-end]").onclick = () => endCall();
+      if (C.onAnswer) C.onAnswer();
       // 상대방 대사: 차례대로 보여주고 마지막 대사가 사라진 뒤 전화가 끊김
       runLines(C.lines || [], lineEl, timers, { start: C.lineStart, hangUp: C.hangUpAfter, name, showWho: true }, endCall);
     }
@@ -1508,10 +1516,19 @@
     // 처음 몇 번은 상대가 바로 끊음 (rejectFirst: [ms, ms, ...])
     const tries = (callTries[name] = (callTries[name] || 0) + 1), rej = script.rejectFirst || [];
     if (tries <= rej.length) { timers.push(setTimeout(() => { clearInterval(ringbackTimer); finish("통화 종료"); }, rej[tries - 1])); return; }
+    // 한 번 통화가 이어진 뒤에는 '없는 번호' 안내만 나옴
+    if (script.deadAfterOnce && script._used) {
+      timers.push(setTimeout(() => {
+        clearInterval(ringbackTimer); callEl.classList.remove("dialing"); tEl.textContent = "연결 중...";
+        runLines([{ text: script.deadText || "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", ms: 4200 }], lineEl, timers, { start: 300, hangUp: 400, name: "안내" , showWho: false }, () => finish("통화 종료"));
+      }, 2200));
+      return;
+    }
     const waitMs = answered ? (script.answerAfter ?? 3000 + Math.random() * 3000) : 9000;
     timers.push(setTimeout(() => {
       clearInterval(ringbackTimer);
       if (!answered) { finish("응답 없음"); return; }
+      script._used = true;
       callEl.classList.remove("dialing");
       const t0 = Date.now();
       const draw = () => { const sec = Math.floor((Date.now() - t0) / 1000); tEl.textContent = `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
