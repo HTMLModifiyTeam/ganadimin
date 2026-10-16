@@ -1805,8 +1805,13 @@
   }
   window.addEventListener("resize", fitScale);
   if (window.visualViewport) visualViewport.addEventListener("resize", fitScale);
+  /* 안드로이드: 휴대폰을 열면 전체 화면 (아이폰은 브라우저가 허용하지 않아 그대로) */
+  const ANDROID = /Android/i.test(navigator.userAgent);
+  function enterFull() { if (!ANDROID || document.fullscreenElement) return; try { const r = document.documentElement.requestFullscreen?.({ navigationUI: "hide" }); r && r.catch(() => {}); } catch (e) {} }
+  function exitFull() { if (!document.fullscreenElement) return; try { const r = document.exitFullscreen?.(); r && r.catch(() => {}); } catch (e) {} }
   function openPhone() {
     if (layer.classList.contains("open")) return;
+    enterFull();
     requestAnimationFrame(fitScale);
     try { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
     screens.innerHTML = ""; stack = [];
@@ -1827,6 +1832,7 @@
     stack.forEach(sc => sc._cleanup && sc._cleanup());
     layer.classList.remove("open"); layer.setAttribute("aria-hidden", "true");
     document.body.style.overflow = ""; hideBanner();
+    exitFull();
   }
   layer.addEventListener("click", e => { if (e.target.closest("[data-close]")) closePhone(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && layer.classList.contains("open")) (stack.length > 1 ? back() : closePhone()); });
