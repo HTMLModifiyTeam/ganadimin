@@ -340,7 +340,7 @@
   const kav = c => c && c.channel ? `<div class="av kch"><span>${esc(c.name[0])}</span></div>` : av(c ? c.name : "");
   function kakaoApp() {
     const K = P.kakao;
-    const row = (c, extra = "") => `<button class="kk-row ${extra}" style="width:100%;text-align:left" data-room="${esc(c.name)}">${kav(c)}<div class="body"><div class="nm">${esc(c.name)}</div><div class="pv">${esc(c.preview)}</div></div><div class="meta"><span>${esc(c.when)}</span>${c.unread ? `<em>${c.unread}</em>` : ""}</div></button>`;
+    const row = (c, extra = "") => `<button class="kk-row ${extra}${c.pinned ? " pin" : ""}" style="width:100%;text-align:left" data-room="${esc(c.name)}">${kav(c)}<div class="body"><div class="nm">${esc(c.name)}${c.pinned ? `<svg class="kpin" viewBox="0 0 24 24" width="13" height="13"><path d="M15 3l6 6-3 1-4 4 .5 4.5L13 20l-4-4-5 5-1-1 5-5-4-4 1.5-1.5L10 10l4-4z" fill="#b0b0b5"/></svg>` : ""}</div><div class="pv">${esc(c.preview)}</div></div><div class="meta"><span>${esc(c.when)}</span>${c.unread ? `<em>${c.unread}</em>` : ""}</div></button>`;
     const el = h(`<section class="screen kk">
       <div class="kk-top"><h2>채팅</h2><div class="icons">${ic.search}<svg viewBox="0 0 24 24"><path d="M12 4c-4.4 0-8 2.9-8 6.5 0 2.3 1.5 4.3 3.7 5.5L7 20l3.6-2.4c.5.1.9.1 1.4.1 4.4 0 8-2.9 8-6.5S16.4 4 12 4z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1.3z"/></svg></div></div>
       <div class="kk-chips"><span class="on">전체</span><span>💬 <em data-kbadge>${P.badges.kakao}</em></span><span>ChatGPT</span><span style="color:#2fbf4a">✆</span></div>
@@ -368,6 +368,9 @@
     return el;
   }
   let kakaoList = null;
+  /* 고정 채팅방은 항상 맨 위에 두고, 새 대화는 그 아래로 */
+  function kTop(c) { const K = P.kakao; const n = K.chats.filter(x => x.pinned && x !== c).length; K.chats.splice(c.pinned ? 0 : n, 0, c); }
+  function kPrepend(list, node, c) { const pins = c.pinned ? [] : list.querySelectorAll(".kk-row.pin"); const last = pins[pins.length - 1]; if (last) last.after(node); else list.prepend(node); }
   /* 카톡 한 통 도착: 데이터·목록·대화방·배지·알림 반영 */
   function deliverKakao(from, text) {
     const K = P.kakao;
@@ -382,12 +385,12 @@
     if (c) K.chats.splice(K.chats.indexOf(c), 1); else c = { name: from };
     const top = stack[stack.length - 1], viewing = top && top.dataset.room === from;
     Object.assign(c, { preview: text, when: P.time, unread: viewing ? 0 : (c.unread || 0) + 1 });
-    K.chats.unshift(c);
+    kTop(c);
     if (!viewing) { P.badges.kakao++; updKakaoBadges(); }
     if (kakaoList && kakaoList.el.isConnected) {
       const list = kakaoList.el.querySelector("[data-list]");
       list.querySelector(`[data-room="${CSS.escape(from)}"]`)?.remove();
-      list.prepend(h(kakaoList.row(c, "new")));
+      kPrepend(list, h(kakaoList.row(c, "new")), c);
     }
     if (viewing) {
       top.querySelector(".kmsgs").insertAdjacentHTML("beforeend", `${needDate ? `<div class="date">${todayLabel}</div>` : ""}<div class="kline them"><div class="kb">${esc(text)}</div><div class="kmeta"><span>${esc(P.time)}</span></div></div>`);
@@ -455,8 +458,8 @@
       const sc = el.querySelector(".scroll"); sc.scrollTop = sc.scrollHeight;
       const K = P.kakao; let c = K.chats.find(x => x.name === name);
       if (c) K.chats.splice(K.chats.indexOf(c), 1); else c = { name };
-      Object.assign(c, { preview: text, when: P.time, unread: 0 }); K.chats.unshift(c);
-      if (kakaoList && kakaoList.el.isConnected) { const list = kakaoList.el.querySelector("[data-list]"); list.querySelector(`[data-room="${CSS.escape(name)}"]`)?.remove(); list.prepend(h(kakaoList.row(c))); }
+      Object.assign(c, { preview: text, when: P.time, unread: 0 }); kTop(c);
+      if (kakaoList && kakaoList.el.isConnected) { const list = kakaoList.el.querySelector("[data-list]"); list.querySelector(`[data-room="${CSS.escape(name)}"]`)?.remove(); kPrepend(list, h(kakaoList.row(c)), c); }
       // 자동 답장
       const norm = t => t.replace(/[\s.!?~…]+/g, "");
       const rule = ((K.autoReplies || {})[name] || []).find(r => r.match.some(m => norm(m) === norm(text)));
