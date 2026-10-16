@@ -974,13 +974,15 @@
       return v;
     }
     function dmRoom(c) {
+      const prof = ((G.profile || {}).followingTop || []).find(u => u.id === c.id && u.profile);
       const body = (c.msgs || []).map(m => m.date ? `<div class="ig-dmdate">${esc(m.date)}</div>` : `<div class="ig-bub ${m.me ? "me" : ""}">${m.me ? "" : avatar(c.id)}<span>${esc(m.text)}</span></div>`).join("");
       const v = h(`<section class="screen ig">
-        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button>${avatar(c.id)}<div class="ig-dmt"><b>${esc(c.name || c.id)}</b><small>${esc(c.id)}</small></div></div>
-        <div class="scroll" data-autobottom><div class="ig-dmhead">${avatar(c.id, true)}<b>${esc(c.name || c.id)}</b><small>${esc(c.id)} · Instagram</small></div>${body}${c.status ? `<div class="ig-seen">${esc(c.status)}</div>` : ""}<div style="height:16px"></div></div>
+        <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><div class="ig-dmt-wrap" data-uprof>${avatar(c.id)}<div class="ig-dmt"><b>${esc(c.name || c.id)}</b><small>${esc(c.id)}</small></div></div></div>
+        <div class="scroll" data-autobottom><div class="ig-dmhead" data-uprof>${avatar(c.id, true)}<b>${esc(c.name || c.id)}</b><small>${esc(c.id)} · Instagram</small>${prof ? `<span class="ig-viewprof">프로필 보기</span>` : ""}</div>${body}${c.status ? `<div class="ig-seen">${esc(c.status)}</div>` : ""}<div style="height:16px"></div></div>
         <div class="ig-comp"><span>메시지 보내기...</span></div>
       </section>`);
       v.querySelector("[data-back]").onclick = back;
+      if (prof) v.querySelectorAll("[data-uprof]").forEach(x => { x.style.cursor = "pointer"; x.onclick = () => show(userView(prof), "push"); });
       return v;
     }
     function profileView() {
@@ -1508,7 +1510,7 @@
       const n = Math.round((tgt - base) / 864e5);
       dday = `<div class="lw-dday"><small>${esc(W.dday.label)}</small><b>${n === 0 ? "D-DAY" : "D-" + n}</b></div>`;
     }
-    const music = W.music ? `<div class="lw-circ"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg><span>${esc(W.music)}</span></div>` : "";
+    const music = W.music ? `<div class="lw-circ" data-music><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg><span>${esc(W.music)}</span></div>` : "";
     const alarm = W.alarm ? `<div class="lw-circ"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7" fill="currentColor"/><path d="M12 9.5V13l2.2 1.6" stroke="#8aa" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M4 6l3-2.5M20 6l-3-2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${esc(W.alarm)}</span></div>` : "";
     return `<div class="lk-widgets">${dday}<div class="lw-right">${music}${alarm}</div></div>`;
   }
@@ -1539,9 +1541,45 @@
     lockEl.addEventListener("pointerdown", e => { if (!lockEl.classList.contains("pin")) sy = e.clientY; });
     lockEl.addEventListener("pointerup", e => { if (sy !== null && sy - e.clientY > 60) showPin(); sy = null; });
     lockEl.addEventListener("click", e => {
+      if (e.target.closest("[data-music]")) { openPlayer(); return; }
       const k = e.target.closest("[data-k]"); if (k) { press(k.dataset.k); return; }
       if (e.target.closest("[data-del]")) { if (pin) { pin = pin.slice(0, -1); drawPin(); } else hidePin(); }
     });
+  }
+  /* 잠금화면 음악 위젯 → 재생 화면 */
+  function openPlayer() {
+    const M = (P.lockWidgets || {}).player || { title: P.lockWidgets.music, artist: "" };
+    const [mm, ss] = (M.length || "4:00").split(":").map(Number), total = mm * 60 + ss;
+    let pos = M.at || 0, playing = true, tm = null;
+    const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+    const pl = h(`<div class="lk-player">
+      <div class="lp-grab" data-pclose></div>
+      <div class="lp-art"><span>♪</span></div>
+      <div class="lp-meta"><div><b>${esc(M.title)}</b><small>${esc(M.artist)}</small></div><span class="lp-more">•••</span></div>
+      <div class="lp-bar"><i data-fill></i></div>
+      <div class="lp-times"><span data-cur></span><span data-left></span></div>
+      <div class="lp-ctrl"><button data-prev>⏮</button><button data-play class="big"></button><button data-next>⏭</button></div>
+      <div class="lp-vol"><span>🔈</span><i><b></b></i><span>🔊</span></div>
+      ${M.link ? `<a class="lp-link" href="${esc(M.link)}" target="_blank" rel="noopener">YouTube에서 듣기 ↗</a>` : ""}
+      <button class="lp-close" data-pclose>닫기</button>
+    </div>`);
+    const draw = () => {
+      pl.querySelector("[data-fill]").style.width = (pos / total * 100) + "%";
+      pl.querySelector("[data-cur]").textContent = fmt(pos);
+      pl.querySelector("[data-left]").textContent = "-" + fmt(total - pos);
+      pl.querySelector("[data-play]").innerHTML = playing ? `<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>` : `<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`;
+    };
+    tm = setInterval(() => { if (playing) { pos = (pos + 1) % total; draw(); } }, 1000);
+    pl.addEventListener("click", e => {
+      e.stopPropagation();
+      if (e.target.closest("[data-play]")) { playing = !playing; draw(); }
+      else if (e.target.closest("[data-prev]")) { pos = 0; draw(); }
+      else if (e.target.closest("[data-next]")) { pos = 0; draw(); }
+      else if (e.target.closest("[data-pclose]")) { clearInterval(tm); pl.classList.remove("show"); setTimeout(() => pl.remove(), 300); }
+    });
+    pl.addEventListener("pointerdown", e => e.stopPropagation());
+    pl.addEventListener("pointerup", e => e.stopPropagation());
+    draw(); lockEl.appendChild(pl); requestAnimationFrame(() => pl.classList.add("show"));
   }
   function showPin() { pin = ""; drawPin(); lockEl.classList.add("pin"); }
   function hidePin() { lockEl.classList.remove("pin"); }
