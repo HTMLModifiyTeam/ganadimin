@@ -501,7 +501,7 @@
         <div class="bigtitle" style="padding-bottom:4px">모든 iCloud</div>
         <div class="count">${P.notes.length}개의 메모</div>
         ${groups.map(g => `<h3>${esc(g.name)}</h3>${g.items.map(([n, i]) => {
-          const first = n.body.split("\n").slice(1).filter(Boolean).join(" ");
+          const first = n.body.split("\n").filter(Boolean).join(" ") || "추가 텍스트 없음";
           return `<button class="ncard" data-note="${i}"><b>${esc(n.title)}</b><div class="d"><em>${esc(n.date)}</em>${esc(first)}</div><div class="f">🗀 메모</div></button>`;
         }).join("")}`).join("")}
         <div style="height:20px"></div>
@@ -515,7 +515,7 @@
   function noteDetail(n) {
     const el = h(`<section class="screen white">
       <div class="navbar"><button class="pill round" data-back>${ic.back}</button><span class="pill" style="gap:6px;padding:0 6px">${ic.undo.replace("<svg", '<svg style="margin:0 6px"')}${ic.share.replace("<svg", '<svg style="margin:0 6px"')}${ic.more.replace("<svg", '<svg style="margin:0 6px"')}</span></div>
-      <div class="scroll"><div class="note-body">${esc(n.body)}</div></div>
+      <div class="scroll"><div class="note-body"><div class="note-title">${esc(n.title)}</div>${esc(n.body)}</div></div>
       <div class="note-tools"><span class="grp">${ic.check}${ic.clip}${ic.pen}</span><span class="grp">${ic.compose}</span></div>
     </section>`);
     el.querySelector("[data-back]").onclick = back;

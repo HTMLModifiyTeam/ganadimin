@@ -222,7 +222,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ncard .f{font-size:12px;color:var(--ios-gray);margin-top:4px;display:flex;align-items:center;gap:4px}
 .notes .count{font-size:15px;color:var(--ios-gray);margin:-10px 18px 0}
 .note-body{padding:10px 30px;font-size:17px;line-height:1.7;white-space:pre-wrap}
-.note-body:first-line{font-weight:700;font-size:22px}
+.note-body .note-title{word-break:keep-all;font-weight:700;font-size:24px;line-height:1.35;margin-bottom:8px}
 .note-tools{display:flex;justify-content:space-between;align-items:center;padding:10px 22px 40px;flex:none}
 .note-tools .grp{display:flex;gap:6px;background:rgba(255,255,255,.95);box-shadow:0 1px 8px rgba(0,0,0,.08);border-radius:24px;padding:0 6px}
 .note-tools svg{width:22px;height:22px;stroke:#111;fill:none;stroke-width:2;margin:11px 10px}
