@@ -455,11 +455,13 @@
       // 트리거 단어를 한참 안 쓰면 정해진 문장이 대신 전송됨
       let sendText = typed;
       const NG = !SC && (P.kakao.nudge || {})[name];
-      if (NG) {
+      if (NG && !NG.done) {   // 한 번만 일어남. 그 전에 직접 트리거 단어를 쓰면 일어나지 않음
         const has = t => (NG.words || []).some(w => t.replace(/\s+/g, "").includes(w));
-        if (NG.idx != null) { sendText = NG.lines[NG.idx++]; if (NG.idx >= NG.lines.length) { NG.idx = null; NG.miss = 0; } }
-        else if ((NG.miss || 0) >= NG.after) { NG.idx = 0; sendText = NG.lines[NG.idx++]; if (NG.idx >= NG.lines.length) { NG.idx = null; NG.miss = 0; } }
-        else NG.miss = has(typed) ? 0 : (NG.miss || 0) + 1;
+        if (NG.idx != null || (NG.miss || 0) >= NG.after) {
+          NG.idx = NG.idx || 0; sendText = NG.lines[NG.idx++];
+          if (NG.idx >= NG.lines.length) NG.done = true;
+        } else if (has(typed)) NG.done = true;
+        else NG.miss = (NG.miss || 0) + 1;
       }
       (SC ? SC.send : [sendText]).forEach(text => {
       const todayLabel = `${TODAY.getFullYear()}년 ${TODAY.getMonth() + 1}월 ${TODAY.getDate()}일 ${WD[TODAY.getDay()]}요일`;
