@@ -628,7 +628,7 @@ window.PHONE = {
   /* ---------- 인스타그램 ----------
      img에 "img/파일.jpg"를 넣으면 실제 사진, 비우면 bg 색 + emoji 로 표시 */
   insta: {
-    me: "minjae_k",
+    me: "alswo_k",
     /* 오른쪽 아래 프로필을 누르면 보이는 민재 피드 (위에서부터 최신순) */
     profile: {
       name: "강민재", followers: "1,284", following: "312",
