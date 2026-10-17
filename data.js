@@ -172,7 +172,7 @@ window.PHONE = {
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   /* 잠금화면 위젯: dday(월-일 기준 남은 날), music(곡 제목), alarm(다음 알람) */
   /* 홈 화면 음악 위젯 (누르면 link로 이동) */
-  homeMusic: { title: "DOC와 춤을", artist: "DJ DOC", link: "https://youtu.be/tV4PQOGJo3U?si=y6nxBsXizPfI-hsv" },
+  homeMusic: { title: "DOC와 춤을", artist: "DJ DOC", cover: "img/doc.jpg", link: "https://youtu.be/tV4PQOGJo3U?si=y6nxBsXizPfI-hsv" },
   lockWidgets: { dday: { label: "변호사님 생일🩷", md: "06-17" }, music: "애상", alarm: "6:00",
     /* 음악 위젯을 누르면 바로 열리는 링크 */
     musicLink: "https://youtu.be/0g-_cDxZzMg?si=qOOrpSFRlTf7YeWI" },
