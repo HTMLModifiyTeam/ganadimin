@@ -174,7 +174,7 @@ window.PHONE = {
   lockWidgets: { dday: { label: "변호사님 생일🩷", md: "06-17" }, music: "애상", alarm: "6:00",
     /* 음악 위젯을 누르면 바로 열리는 링크 */
     musicLink: "https://youtu.be/0g-_cDxZzMg?si=qOOrpSFRlTf7YeWI" },
-  badges: { phone: 2, mail: 2, messages: 4, kakao: 15 },
+  badges: { phone: 2, mail: "999+", messages: 4, kakao: 15 },
 
   /* 프로필 사진 (비우면 기본 아이콘) */
   avatars: {
