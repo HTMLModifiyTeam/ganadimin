@@ -1208,8 +1208,8 @@
       <header><span class="ig-ring">${avatar(q.id)}</span><div><b>${esc(q.id)}${q.verified ? II.verified : ""}</b>${q.ad ? `<small>광고</small>` : q.music ? `<small>${II.note}${esc(q.music)}</small>` : q.place ? `<small>${esc(q.place)}</small>` : ""}</div>${q.follow ? `<span class="ig-follow">팔로우</span>` : ""}<span class="mo">${mine ? II.more : II.menu}</span></header>
       <div class="ig-img" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}${q.headline ? `<b class="ig-adh">${esc(q.headline)}</b>` : ""}</div>
       ${q.ad ? `<div class="ig-cta"><span>${esc(q.cta || "더 알아보기")}</span><i>›</i></div>` : ""}
-      <div class="ig-act">${mine ? II.heart : `<button data-like="${i}">${II.heart}</button>`}${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
-      <div class="ig-txt"><b ${mine ? "" : `data-likes="${i}"`}>좋아요 ${q.likes.toLocaleString()}개</b>
+      <div class="ig-act">${mine ? II.heart : `<button data-like="${i}" class="${q.liked ? "on" : ""}">${II.heart}</button>`}${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
+      <div class="ig-txt"><b ${mine ? "" : `data-likes="${i}"`}>좋아요 ${(q.likes + (q.liked ? 1 : 0)).toLocaleString()}개</b>
         <p><b>${esc(q.id)}</b> ${esc(q.caption)}</p>
         ${q.comments ? `<span class="c">댓글 ${q.comments}개 모두 보기</span>` : ""}
         <span class="t">${esc(q.when)}</span></div>
