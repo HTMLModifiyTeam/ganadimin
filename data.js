@@ -156,7 +156,7 @@ window.PHONE = {
     ] },
     "기본": { lines: [
       { text: "여보세요?" },
-      { who: "me", text: "차주한입니다." },
+      { who: "me", text: "강민재입니다." },
       { text: "아, 네. 말씀하세요." }
     ] }
   },
