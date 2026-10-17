@@ -26,6 +26,7 @@
     insta: `<svg viewBox="0 0 60 60"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb347"/><stop offset=".5" stop-color="#ff4f7b"/><stop offset="1" stop-color="#8f5cff"/></linearGradient></defs><rect width="60" height="60" fill="url(#ig)"/><path d="M30 44s-13-8-13-17a7 7 0 0 1 13-3.5A7 7 0 0 1 43 27c0 9-13 17-13 17z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/></svg>`,
     karrot: `<svg viewBox="0 0 60 60"><defs><linearGradient id="kr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff6f0f"/></linearGradient></defs><rect width="60" height="60" fill="url(#kr)"/><path d="M17 27l13-10 13 10v15a2 2 0 0 1-2 2H19a2 2 0 0 1-2-2z" fill="#fff"/><rect x="26" y="32" width="8" height="12" rx="1.5" fill="#ff7a1f"/></svg>`,
     blockblast: `<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#2a2f6e"/>${[[10,10,"#ff5a5f"],[22,10,"#ff5a5f"],[34,10,"#ffc93c"],[10,22,"#4cc9f0"],[22,22,"#ffc93c"],[34,22,"#ffc93c"],[46,22,"#7bd389"],[10,34,"#4cc9f0"],[22,34,"#4cc9f0"],[34,34,"#b388eb"],[46,34,"#7bd389"],[34,46,"#b388eb"],[46,46,"#7bd389"],[22,46,"#b388eb"]].map(([x,y,c])=>`<rect x="${x-4}" y="${y-4}" width="11" height="11" rx="2.2" fill="${c}"/><rect x="${x-4}" y="${y-4}" width="11" height="3.2" rx="1.6" fill="#fff" opacity=".3"/>`).join("")}</svg>`,
+    maps: `<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#e8efe1"/><path d="M0 40 L60 22 V34 L0 52Z" fill="#9fd3f5"/><rect x="0" y="0" width="22" height="20" fill="#b9e2a5"/><path d="M-2 14 L62 30" stroke="#fff" stroke-width="5"/><path d="M34 -2 L26 62" stroke="#fff" stroke-width="5"/><path d="M34 -2 L26 62" stroke="#f8c74a" stroke-width="2"/><path d="M41 12a8 8 0 0 0-16 0c0 7 8 15 8 15s8-8 8-15z" fill="#ff3b30"/><circle cx="33" cy="12" r="3" fill="#fff"/></svg>`,
     mines: `<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#c9ced6"/>${[0,1,2].flatMap(r=>[0,1,2].map(c=>`<rect x="${6+c*16}" y="${6+r*16}" width="15" height="15" fill="${(r+c)%2?'#e4e7ec':'#d6dae1'}"/>`)).join("")}<text x="13.5" y="19" text-anchor="middle" font-size="10" font-weight="800" fill="#2563eb">1</text><text x="45.5" y="51" text-anchor="middle" font-size="10" font-weight="800" fill="#16a34a">2</text><g transform="translate(30 30)"><circle r="5.5" fill="#111"/>${[0,45,90,135].map(a=>`<rect x="-.9" y="-8.5" width="1.8" height="17" fill="#111" transform="rotate(${a})"/>`).join("")}<circle cx="-1.8" cy="-1.8" r="1.4" fill="#fff"/></g><path d="M44 8v10M44 8l7 3-7 3" stroke="#111" stroke-width="1.6" fill="#e5484d"/></svg>`,
     mail: `<svg viewBox="0 0 60 60"><defs><linearGradient id="ml" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e90ff"/><stop offset="1" stop-color="#0a5fd8"/></linearGradient></defs><rect width="60" height="60" fill="url(#ml)"/><rect x="11" y="18" width="38" height="25" rx="3.5" fill="#fff"/><path d="M12 20l18 13 18-13" fill="none" stroke="#9cc3f5" stroke-width="2.2" stroke-linejoin="round"/></svg>`,
     translate: `<svg viewBox="0 0 60 60"><rect width="60" height="60" fill="#f1f3f7"/><rect x="8" y="10" width="28" height="30" rx="4" fill="#4a86f0"/><text x="22" y="32" text-anchor="middle" font-size="17" font-weight="700" fill="#fff">가</text><rect x="25" y="22" width="27" height="28" rx="4" fill="#fff" stroke="#c9d3e6"/><text x="38.5" y="42" text-anchor="middle" font-size="15" fill="#555">文</text></svg>`,
@@ -154,7 +155,7 @@
   const apps = [
     ["mail", "메일"], ["calendar", "캘린더"], ["clock", "시계"], ["weather", "날씨"],
     ["notes", "메모"], ["photos", "사진"], ["camera", "카메라"], ["insta", "Instagram"],
-    ["blockblast", "Block Blast"], ["mines", "지뢰찾기"]
+    ["blockblast", "Block Blast"], ["mines", "지뢰찾기"], ["maps", "지도"]
   ];
   /* 홈 화면 위젯: 오늘 날짜 + 다음 일정 2개 */
   function nextEvents(n) {
@@ -1194,6 +1195,50 @@
     return el;
   }
 
+  /* ================= 지도 ================= */
+  function mapsApp() {
+    const M = P.maps || { places: [] };
+    const svgMap = `<svg class="mp-svg" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="700" fill="#eef0e8"/>
+      <path d="M-20 430 C80 400 160 470 260 440 S380 380 430 400 L430 480 C360 470 300 520 220 520 S60 480 -20 510Z" fill="#a9d7f4"/>
+      <rect x="20" y="70" width="120" height="90" rx="14" fill="#c7e6b4"/><rect x="250" y="560" width="120" height="100" rx="16" fill="#c7e6b4"/>
+      <rect x="230" y="150" width="90" height="60" rx="6" fill="#e2e4dc"/><rect x="40" y="250" width="70" height="80" rx="6" fill="#e2e4dc"/><rect x="290" y="270" width="80" height="70" rx="6" fill="#e2e4dc"/>
+      ${[[0, 210, 400, 230, 14], [0, 360, 400, 330, 10], [0, 600, 400, 580, 10], [170, 0, 150, 700, 16], [320, 0, 350, 700, 10], [70, 0, 90, 700, 8]].map(([a, b, c, d, w]) => `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="#fff" stroke-width="${w}" stroke-linecap="round"/>`).join("")}
+      <line x1="170" y1="0" x2="150" y2="700" stroke="#f8d26a" stroke-width="5"/>
+      ${[["서초역", 105, 200], ["교대역", 210, 245], ["반포한강공원", 140, 455], ["송파구", 300, 300], ["서울동부지방법원", 300, 620], ["서리풀공원", 80, 120]].map(([n, x, y]) => `<text x="${x}" y="${y}" font-size="13" fill="#6b6f66" text-anchor="middle" font-weight="600">${n}</text>`).join("")}
+    </svg>`;
+    const el = h(`<section class="screen mp">
+      <div class="mp-map">${svgMap}<i class="mp-me" style="left:46%;top:36%"></i><i class="mp-pin" data-pin hidden></i></div>
+      <button class="mp-back" data-home>${ic.back}</button>
+      <div class="mp-tools"><span>🗺</span><span>➤</span></div>
+      <div class="mp-sheet">
+        <div class="mp-grab"></div>
+        <div class="mp-search">${ic.search}<span>지도 검색</span><span class="mic">${ic.mic}</span></div>
+        <div class="mp-card" data-card hidden></div>
+        <div data-list>
+          <div class="mp-h">즐겨찾기</div>
+          <div class="mp-favs">${(M.favorites || []).map((f, i) => `<button data-fav="${i}"><i style="background:${f.color}">${f.icon}</i><b>${esc(f.name)}</b><small>${esc(f.dist)}</small></button>`).join("")}</div>
+          <div class="mp-h">최근 항목</div>
+          ${(M.recents || []).map((r, i) => `<button class="mp-row" data-rec="${i}"><i>${r.icon || "📍"}</i><div><b>${esc(r.name)}</b><small>${esc(r.addr)}</small></div></button>`).join("")}
+        </div>
+      </div>
+    </section>`);
+    const card = el.querySelector("[data-card]"), list = el.querySelector("[data-list]"), pin = el.querySelector("[data-pin]");
+    const open = it => {
+      pin.hidden = false; pin.style.left = (it.x ?? 50) + "%"; pin.style.top = (it.y ?? 40) + "%";
+      card.innerHTML = `<div class="mp-ct"><div><b>${esc(it.name)}</b><small>${esc(it.addr || "")}${it.dist ? " · " + esc(it.dist) : ""}</small></div><button data-cclose>✕</button></div>
+        <div class="mp-cbtns"><span class="go">🚗 ${esc(it.time || "12분")}</span><span>📞 전화</span><span>⭐ 저장</span></div>${it.note ? `<p class="mp-note">${esc(it.note)}</p>` : ""}`;
+      card.hidden = false; list.hidden = true;
+    };
+    el.addEventListener("click", e => {
+      if (e.target.closest("[data-home]")) { goHome(); return; }
+      if (e.target.closest("[data-cclose]")) { card.hidden = true; list.hidden = false; pin.hidden = true; return; }
+      const f = e.target.closest("[data-fav]"); if (f) { open(M.favorites[+f.dataset.fav]); return; }
+      const r = e.target.closest("[data-rec]"); if (r) open(M.recents[+r.dataset.rec]);
+    });
+    return el;
+  }
+
   /* ================= 블록 블래스트 ================= */
   function blockblastApp() {
     const SZ = 8, KEY = "phone-bb-best";
@@ -1415,7 +1460,7 @@
     return el;
   }
 
-  const OPEN = { insta: instaApp, blockblast: blockblastApp, mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
+  const OPEN = { maps: mapsApp, insta: instaApp, blockblast: blockblastApp, mines: minesApp, calendar: calendarApp, camera: cameraApp, clock: clockApp, phone: phoneApp, chrome: chromeApp, messages: messagesApp, kakao: kakaoApp, notes: notesApp, translate: translateApp, photos: photosApp };
 
 
   /* ================= 흐르는 시계 · 캘린더 알림 ================= */

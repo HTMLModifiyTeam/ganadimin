@@ -1010,6 +1010,23 @@ window.PHONE = {
     ]
   },
 
+  /* ---------- 지도 ---------- x, y = 지도 위 핀 위치(%) */
+  maps: {
+    favorites: [
+      { name: "집", icon: "🏠", color: "#007aff", dist: "3.2km", addr: "서초구 반포동", time: "12분", x: 38, y: 58 },
+      { name: "사무실", icon: "💼", color: "#8e8e93", dist: "1.1km", addr: "서초구 서초동", time: "6분", x: 30, y: 30 },
+      { name: "대박집", icon: "🍖", color: "#ff9500", dist: "800m", addr: "서초구 교대역 3번 출구", time: "4분", x: 56, y: 33, note: "금요일 7시 9명 예약 ✔︎" },
+      { name: "할아버지", icon: "🌼", color: "#34c759", dist: "48km", addr: "경기도", time: "1시간 5분", x: 80, y: 88, note: "주말에 가기" }
+    ],
+    recents: [
+      { name: "교대 원조국밥", icon: "🍲", addr: "서초구 서초대로", dist: "600m", time: "3분", x: 58, y: 38 },
+      { name: "서울동부지방법원", icon: "⚖️", addr: "송파구 법원로", dist: "11km", time: "28분", x: 74, y: 88 },
+      { name: "송파구청", icon: "🏛", addr: "송파구 올림픽로", dist: "10km", time: "26분", x: 78, y: 44 },
+      { name: "반포한강공원", icon: "🌊", addr: "서초구 신반포로", dist: "2.4km", time: "9분", x: 36, y: 66 },
+      { name: "성수동 카페거리", icon: "☕️", addr: "성동구 성수동", dist: "9km", time: "24분", x: 90, y: 20 }
+    ]
+  },
+
   /* 블록 블래스트 최고 점수 (보는 사람이 넘기면 그 기기에 새로 저장) */
   blockblast: { best: 3120 },
 
