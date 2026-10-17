@@ -33,26 +33,26 @@ window.PHONE = {
       transcript: ["강민재 변호사님, 저 가락동 302호 김정숙이에요.", "말씀하신 계약서 원본이랑 입금 내역 다 찾았어요.", "시간 되실 때 전화 한 번만 주세요. 감사합니다."] },
     { from: "박상철 (임금체불 의뢰인)", date: "2026. 8. 27.", length: "0:12",
       transcript: ["변호사님, 박상철입니다.", "사장이 오늘 또 연락을 안 받네요…", "다음 기일 전에 한 번 뵐 수 있을까요?"] },
-    { from: "011-617-1201", date: "2026. 6. 17.", length: "0:09", new: true, sea: true,
+    { from: "011-384-9052", date: "2026. 6. 17.", length: "0:09", new: true, sea: true,
       transcript: ["……", "…선배님.", ""] },
     { from: "변호사님❤️", date: "2025. 12. 1.", length: "0:07", after: "ㅎㅎ 저도 사랑해요~",
       transcript: ["…민재야.", "생일 축하해.", "……사랑해.", "끊는다."] },
-    { from: "011-617-1201", date: "2023. 10. 18.", length: "0:14", new: true, sea: true,
+    { from: "011-384-9052", date: "2023. 10. 18.", length: "0:14", new: true, sea: true,
       transcript: ["……", "목소리라도,", "들려주시면 좋을 텐데…"] },
     { from: "이현우 (교통사고 의뢰인)", date: "2023. 3. 9.", length: "0:10",
       transcript: ["변호사님, 이현우입니다.", "블랙박스 영상 USB에 담아서 사무실에 맡겨 뒀어요."] },
-    { from: "011-617-1201", date: "2019. 7. 19.", length: "0:06", sea: true,
+    { from: "011-384-9052", date: "2019. 7. 19.", length: "0:06", sea: true,
       transcript: ["……", "…거기도 비가 오나."] },
     { from: "할아버지", date: "2011. 10. 18.", length: "0:15", after: "…보고 싶다.",
       transcript: ["민재야, 할아버지다.", "괜찮다. 별 거 아니니까 걱정 말고.", "…밥 잘 챙겨 먹어라."] },
     { from: "할아버지", date: "2011. 6. 3.", length: "0:09", after: "…보고 싶다.",
       transcript: ["민재야. 전화를 안 받네.", "바쁜가 보다. 이따 전화해라."] },
-    { from: "011-617-1201", date: "2008. 3. 7.", length: "0:07", sea: true,
+    { from: "011-384-9052", date: "2008. 3. 7.", length: "0:07", sea: true,
       transcript: ["……", "선배님?"] }
   ],
 
   /* 키패드에서 아무 숫자나 누르면 한 자리씩 입력되는 번호 */
-  keypadNumber: "011-617-1201",
+  keypadNumber: "011-384-9052",
   /* 키패드에서 처음 누른 숫자가 단축번호면 그 사람이 뜨고, 통화 버튼으로 바로 걸림 */
   speedDial: { "1": "수일이형" },
 
@@ -84,7 +84,7 @@ window.PHONE = {
         { who: "me", text: "헉… 넵! 저 달려갈게요!!" },
         { text: "과속하지 말고—", cut: true }
       ] },
-    "011-617-1201": { answer: 1, answerAfter: 5000, ambience: "sea", deadAfterOnce: true, deadText: "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", lines: [
+    "011-384-9052": { answer: 1, answerAfter: 5000, ambience: "sea", deadAfterOnce: true, deadText: "지금 거신 번호는 없는 번호입니다. 다시 확인하시고 걸어 주시기 바랍니다.", lines: [
       { who: "me", text: "누구세요?" },
       { text: "……", ms: 3000 },
       { who: "me", text: "…여보세요?" },
@@ -284,7 +284,7 @@ window.PHONE = {
         ["질문지 이메일로 먼저 보내 드릴게요. 검토 부탁드립니다 🙏"]
       ]
     },
-    replyCall: { "011-617-1201": { delay: 3000, ghost: ["…", "제발", "아직 있어?", "한번만이라도", "……", "찾고 있어"] } },
+    replyCall: { "011-384-9052": { delay: 3000, ghost: ["…", "제발", "아직 있어?", "한번만이라도", "……", "찾고 있어"] } },
     threads: [
       { name: "새벽경제 김도윤 기자", preview: "변호사님, 편하실 때 짧게라도 회신 부탁드립니다.", when: "11:20", unread: true, sms: true },
       { name: "대박집 사장님", preview: "금요일에 봬요! 조심히 다니시고요.", when: "10:42", sms: true },
@@ -297,10 +297,10 @@ window.PHONE = {
       { name: "한진택배", preview: "[한진택배] 상품이 문 앞에 배송 완료되었습니다.", when: "수요일", sms: true },
       { name: "070-0000-2290", preview: "(광고) 수익률 300%! 무료 주식 리딩방 입장 ▶", when: "화요일", sms: true },
       { name: "롯데택배", preview: "[롯데택배] 배송 완료되었습니다. (문 앞)", when: "2026. 10. 10.", sms: true },
-      { name: "011-617-1201", preview: ".", when: "2026. 6. 17.", sms: true }
+      { name: "011-384-9052", preview: ".", when: "2026. 6. 17.", sms: true }
     ],
     chats: {
-      "011-617-1201": [
+      "011-384-9052": [
         {"date": "2008년 3월 7일 (금) 오후 11:48"},
         {"text": "어디 있어?"},
         {"date": "2012년 11월 13일 (화) 오전 9:02"},
