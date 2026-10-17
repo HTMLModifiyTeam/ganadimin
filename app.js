@@ -529,6 +529,21 @@
     </section>`);
     el.querySelector("[data-back]").onclick = back;
     el.querySelectorAll("[data-callme]").forEach(b => { b.style.cursor = "pointer"; b.onclick = () => outgoingCall(name); });
+    // 이 방에 머무는 동안 불규칙하게 (최소 8초 간격) 화면이 깜빡이거나 글리치
+    if ((P.messages.haunted || []).includes(name)) {
+      const loop = () => setTimeout(() => {
+        if (!el.isConnected) return;
+        if (stack[stack.length - 1] === el && !callEl && layer.classList.contains("open")) {
+          if (Math.random() < .5) {   // 짧은 깜빡임
+            const n = 1 + (Math.random() * 3 | 0); let k = 0;
+            const blink = () => { el.style.filter = Math.random() < .5 ? "brightness(.15)" : "invert(.85)"; setTimeout(() => { el.style.filter = ""; if (++k < n) setTimeout(blink, 40 + Math.random() * 120); }, 40 + Math.random() * 90); };
+            blink();
+          } else { try { noiseBurst(.18 + Math.random() * .2); } catch (x) {} flicker(160 + Math.random() * 260); }
+        }
+        loop();
+      }, 8000 + Math.random() * 14000);
+      loop();
+    }
     wireComposer(el, text => {
       msgs.push({ me: true, text });
       el.querySelector(".imsg").insertAdjacentHTML("beforeend", `<div class="bub me${sms ? " sms" : ""} sent">${esc(text)}</div>`);
