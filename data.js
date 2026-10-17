@@ -1013,10 +1013,10 @@ window.PHONE = {
   /* ---------- 지도 ---------- x, y = 지도 위 핀 위치(%) */
   maps: {
     favorites: [
-      { name: "집", icon: "🏠", color: "#007aff", dist: "3.2km", addr: "서초구 반포동", time: "12분", x: 38, y: 58 },
+      { name: "우리집", icon: "🏠", color: "#007aff", dist: "3.2km", addr: "서초구 반포동", time: "12분", x: 38, y: 58 },
       { name: "사무실", icon: "💼", color: "#8e8e93", dist: "1.1km", addr: "서초구 서초동", time: "6분", x: 30, y: 30 },
       { name: "대박집", icon: "🍖", color: "#ff9500", dist: "800m", addr: "서초구 교대역 3번 출구", time: "4분", x: 56, y: 33, note: "금요일 7시 9명 예약 ✔︎" },
-      { name: "할아버지", icon: "🌼", color: "#34c759", dist: "48km", addr: "경기도", time: "1시간 5분", x: 80, y: 88, note: "주말에 가기" }
+      { name: "평창동 집", icon: "🏡", color: "#34c759", dist: "14km", addr: "종로구 평창동", time: "38분", x: 22, y: 6 }
     ],
     recents: [
       { name: "교대 원조국밥", icon: "🍲", addr: "서초구 서초대로", dist: "600m", time: "3분", x: 58, y: 38 },
