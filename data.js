@@ -243,7 +243,7 @@ window.PHONE = {
   messages: {
     pinned: "",
     /* 이 대화방에 답장하면 그 번호에서 전화가 걸려옴 (대사는 callScripts 와 같음). 통화한 뒤에는 ghost 문장이 답장으로 왔다가 지워짐 */
-    replyCall: { "011-617-1201": { delay: 3000, ghost: ["…", "민재야", "거기 있어?", "나도", "보고 싶다", "……"] } },
+    replyCall: { "011-617-1201": { delay: 3000, ghost: ["…", "제발", "아직 있어?", "한번만이라도", "……", "찾고 있어"] } },
     threads: [
       { name: "새벽경제 김도윤 기자", preview: "변호사님, 편하실 때 짧게라도 회신 부탁드립니다.", when: "11:20", unread: true, sms: true },
       { name: "대박집 사장님", preview: "금요일에 봬요! 조심히 다니시고요.", when: "10:42", sms: true },
