@@ -516,6 +516,19 @@
       if (th) M.threads.splice(M.threads.indexOf(th), 1); else th = { name, sms };
       Object.assign(th, { preview: text, when: P.time, unread: false }); M.threads.unshift(th);
       if (messagesListEl && messagesListEl.isConnected) messagesListEl.querySelector("[data-threads]").innerHTML = threadsHTML();
+      // 무슨 말을 보내도 오는 답장 (한 바퀴만)
+      const SA = (P.messages.anyReplies || {})[name];
+      if (SA && (SA._i ?? -1) + 1 < SA.length) {
+        const r = SA[(SA._i = (SA._i ?? -1) + 1)];
+        let wait = 1600;
+        (Array.isArray(r) ? r : [r]).forEach(x => setTimeout(() => {
+          msgs.push({ text: x });
+          if (el.isConnected) { el.querySelector(".imsg").insertAdjacentHTML("beforeend", `<div class="bub them${sms ? " sms" : ""}">${esc(x)}</div>`); const s2 = el.querySelector(".scroll"); s2.scrollTop = s2.scrollHeight; }
+          try { msgTone(); } catch (e) {}
+          const th2 = P.messages.threads.find(t => t.name === name); if (th2) th2.preview = x;
+          if (messagesListEl && messagesListEl.isConnected) messagesListEl.querySelector("[data-threads]").innerHTML = threadsHTML();
+        }, (wait += 1300) - 1300));
+      }
       // 답장하면 그 번호에서 먼저 전화가 옴 (한 번만)
       const RC = (P.messages.replyCall || {})[name], cs = (P.callScripts || {})[name];
       // 통화한 뒤에는: 답장이 왔다가 0.8초 뒤 잡음과 함께 사라짐 (보낼 때마다)
