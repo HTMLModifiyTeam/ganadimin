@@ -473,7 +473,7 @@
           const b = h(`<div class="bub them${sms ? " sms" : ""} ghost">${esc(txt)}</div>`);
           el.querySelector(".imsg").appendChild(b); try { msgTone(); } catch (x) {}
           const sc = el.querySelector(".scroll"); sc.scrollTop = sc.scrollHeight;
-          setTimeout(() => { try { noiseBurst(.35); } catch (x) {} b.classList.add("vanish"); setTimeout(() => b.remove(), 380); }, 800);
+          setTimeout(() => { try { noiseBurst(.35); } catch (x) {} b.remove(); }, 800);
         }, RC.ghostDelay || 1600);
         return;
       }
