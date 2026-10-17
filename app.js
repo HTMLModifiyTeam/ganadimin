@@ -354,7 +354,42 @@
   }
   /* 화면 깜빡임 (흔들림 없이) */
   function flicker(ms = 1300) {
-    const dev = $("#device"); dev.classList.add("flicker"); setTimeout(() => dev.classList.remove("flicker"), ms);
+    const dev = $("#device");
+    const cv = document.createElement("canvas"); cv.className = "glitch-cv";
+    const W = 180, H = 390; cv.width = W; cv.height = H;   // 저해상도로 그려서 늘림 → 거친 픽셀 느낌
+    dev.appendChild(cv);
+    const g = cv.getContext("2d"), pal = ["#7b2cff", "#b44cff", "#ff3df2", "#2de2ff", "#ffffff", "#ff4a4a", "#3dff8b", "#ffd23d", "#5b5bff"];
+    const frame = () => {
+      g.clearRect(0, 0, W, H);
+      const full = Math.random() < .55;
+      if (full) { g.fillStyle = "#000"; g.fillRect(0, 0, W, H); }
+      // 굵은 색 띠
+      for (let k = 0, n = 1 + (Math.random() * 3 | 0); k < n; k++) {
+        const y = Math.random() * H | 0, h = 6 + Math.random() * 40 | 0;
+        g.fillStyle = Math.random() < .5 ? "#6a1fff" : (Math.random() < .5 ? "#000" : pal[Math.random() * pal.length | 0]);
+        g.globalAlpha = .6 + Math.random() * .4; g.fillRect(0, y, W, h);
+      }
+      // 가로 줄무늬 (왼쪽에서 번지는 선)
+      for (let k = 0; k < 140; k++) {
+        const y = Math.random() * H | 0, len = W * (.2 + Math.random() * .8), x = Math.random() < .6 ? 0 : Math.random() * W * .5;
+        g.globalAlpha = .35 + Math.random() * .65; g.fillStyle = pal[Math.random() * pal.length | 0];
+        g.fillRect(x, y, len, Math.random() < .85 ? 1 : 2);
+      }
+      // 하얗게 번진 덩어리
+      for (let k = 0; k < 3; k++) {
+        const y = Math.random() * H, gr = g.createLinearGradient(0, 0, W * .6, 0);
+        gr.addColorStop(0, "rgba(255,255,255,.95)"); gr.addColorStop(.25, "rgba(255,180,255,.6)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+        g.globalAlpha = 1; g.fillStyle = gr; g.fillRect(0, y, W * .6, 3 + Math.random() * 10);
+      }
+      // 점 잡음
+      g.globalAlpha = .8;
+      for (let k = 0; k < 260; k++) { g.fillStyle = Math.random() < .7 ? "#fff" : pal[Math.random() * pal.length | 0]; g.fillRect(Math.random() * W | 0, Math.random() * H | 0, 1 + (Math.random() * 3 | 0), 1); }
+      g.globalAlpha = 1;
+      cv.style.opacity = full ? 1 : (.45 + Math.random() * .5);
+    };
+    frame(); const iv = setInterval(frame, 55);
+    dev.classList.add("flicker");
+    setTimeout(() => { clearInterval(iv); cv.remove(); dev.classList.remove("flicker"); }, ms);
   }
 
   /* ================= 크롬 ================= */
