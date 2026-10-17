@@ -333,16 +333,16 @@
     const sr = audioCtx.sampleRate, len = sr * 4, buf = audioCtx.createBuffer(1, len, sr), d = buf.getChannelData(0);
     let last = 0; for (let i = 0; i < len; i++) { last = (last + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }   // 브라운 노이즈
     const src = audioCtx.createBufferSource(); src.buffer = buf; src.loop = true;
-    const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 650;
+    const lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 820;
     const swell = audioCtx.createGain(); swell.gain.value = 0;
     const out = audioCtx.createGain(); out.gain.value = 0;
     src.connect(lp); lp.connect(swell); swell.connect(out); out.connect(audioCtx.destination);
     const t = audioCtx.currentTime;
-    out.gain.linearRampToValueAtTime(.55, t + 1.5);
+    out.gain.linearRampToValueAtTime(1.1, t + 1.5);
     // 파도: 6~8초 간격으로 밀려왔다 빠짐
     let at = t;
     for (let k = 0; k < 40; k++) {
-      const per = 6 + Math.random() * 2.5, peak = .35 + Math.random() * .3;
+      const per = 6 + Math.random() * 2.5, peak = .55 + Math.random() * .35;
       swell.gain.setValueAtTime(.06, at);
       swell.gain.linearRampToValueAtTime(peak, at + per * .45);
       swell.gain.exponentialRampToValueAtTime(.06, at + per);
@@ -406,9 +406,18 @@
       g.globalAlpha = 1;
       cv.style.opacity = full ? 1 : (.45 + Math.random() * .5);
     };
-    frame(); const iv = setInterval(frame, 55);
-    dev.classList.add("flicker");
-    setTimeout(() => { clearInterval(iv); cv.remove(); dev.classList.remove("flicker"); }, ms);
+    // 불규칙한 속도: 아주 짧게 튀거나, 잠깐 멈췄다가, 몰아서 깜빡임
+    const tgt = () => dev.querySelector(".callui") || screens;
+    const FX = ["none", "brightness(2.2) contrast(1.4)", "invert(.9)", "brightness(.35)", "saturate(3) hue-rotate(60deg)", "contrast(2.5) grayscale(.6)"];
+    let alive = true, tm = null;
+    const step = () => {
+      if (!alive) return;
+      if (Math.random() < .18) { cv.style.opacity = 0; tgt().style.filter = "none"; }        // 잠깐 정상 화면
+      else { frame(); tgt().style.filter = FX[Math.random() * FX.length | 0]; tgt().style.opacity = Math.random() < .25 ? (.2 + Math.random() * .5) : 1; }
+      tm = setTimeout(step, Math.random() < .35 ? 15 + Math.random() * 35 : 60 + Math.random() * 190);
+    };
+    step();
+    setTimeout(() => { alive = false; clearTimeout(tm); cv.remove(); const t = tgt(); t.style.filter = ""; t.style.opacity = ""; }, ms);
   }
 
   /* ================= 크롬 ================= */
