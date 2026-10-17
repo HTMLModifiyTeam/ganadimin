@@ -2015,6 +2015,7 @@
   function fitScale() {
     const dev = $("#device"), hgt = dev.clientHeight || 844;
     dev.style.setProperty("--s", Math.min(1, Math.max(.55, hgt / 844)).toFixed(3));
+    dev.classList.toggle("short", hgt < 800);   // 화면이 짧으면 '검색' 버튼 숨김 (아이콘과 겹치지 않게)
   }
   window.addEventListener("resize", fitScale);
   if (window.visualViewport) visualViewport.addEventListener("resize", fitScale);
