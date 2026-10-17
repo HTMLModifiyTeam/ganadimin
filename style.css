@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170945") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170949") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -956,3 +956,22 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .nchk.on .nbox{background:#f7b500;border-color:#f7b500}
 .nchk.on .nbox svg{opacity:1}
 .nchk.on span{color:#8e8e93;text-decoration:line-through}
+
+/* 홈: 정사각형 위젯 2개 + 어두운 배경 + 배지 위치 */
+.home:before{background:rgba(0,0,0,.28)!important}
+.widget.sq{grid-column:span 2;height:auto;aspect-ratio:1;flex-direction:column;gap:6px;padding:14px;margin:0 6px 4px;border-radius:22px}
+.widget.sq .wg-top{display:flex;flex-direction:column;line-height:1}
+.widget.sq .wg-top small{font-size:12px;font-weight:700;color:#e5484d}
+.widget.sq .wg-top b{font-size:34px;font-weight:400;margin-top:2px}
+.widget.sq .wg-list{gap:6px;justify-content:flex-start;margin-top:4px}
+.widget.sq .wg-ev b{font-size:12.5px}
+.widget.sq .wg-ev small{font-size:11px}
+.mw{justify-content:space-between}
+.mw-art{width:58px;height:58px;border-radius:12px;background:linear-gradient(135deg,#ffb347,#ff5e62 55%,#7b2ff7);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;box-shadow:0 4px 10px rgba(0,0,0,.18)}
+.mw-t{display:flex;flex-direction:column;min-width:0}
+.mw-t b{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mw-t small{font-size:12px;opacity:.7}
+.mw-ctl{display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.mw-ctl svg{width:18px;height:18px;fill:currentColor;stroke:currentColor;stroke-width:2}
+.mw-ctl svg.pl{width:24px;height:24px;stroke:none}
+.badge{left:auto!important;right:calc(50% - 34px)!important}

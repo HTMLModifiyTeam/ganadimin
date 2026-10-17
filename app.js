@@ -167,7 +167,10 @@
   function widgetHTML() {
     const list = nextEvents(2);
     const col = c => ((P.calendar && P.calendar.calendars) || {})[c] || "#8e8e93";
-    return `<button class="widget" data-app="calendar"><div class="wg-date"><small>${WD[TODAY.getDay()]}요일</small><b>${TODAY.getDate()}</b><span>${TODAY.getMonth() + 1}월</span></div><div class="wg-list">${list.length ? list.map(e => `<div class="wg-ev"><i style="background:${col(e.cal)}"></i><div><b>${esc(e.title)}</b><small>${e.d.getMonth() + 1}/${e.d.getDate()} (${WD[e.d.getDay()]}) ${esc(e.start)}${e.place ? " · " + esc(e.place) : ""}</small></div></div>`).join("") : `<div class="wg-none">다가오는 일정 없음</div>`}</div></button>`;
+    const MW = P.homeMusic;
+    const cal = `<button class="widget sq" data-app="calendar"><div class="wg-top"><small>${WD[TODAY.getDay()]}요일</small><b>${TODAY.getDate()}</b></div><div class="wg-list">${list.length ? list.map(e => `<div class="wg-ev"><i style="background:${col(e.cal)}"></i><div><b>${esc(e.title)}</b><small>${e.d.getMonth() + 1}/${e.d.getDate()} ${esc(e.start || "")}</small></div></div>`).join("") : `<div class="wg-none">일정 없음</div>`}</div></button>`;
+    const mus = MW ? `<button class="widget sq mw" data-mlink><div class="mw-art"><span>♪</span></div><div class="mw-t"><b>${esc(MW.title)}</b><small>${esc(MW.artist)}</small></div><div class="mw-ctl"><svg viewBox="0 0 24 24"><path d="M6 6v12M19 6l-10 6 10 6z"/></svg><svg viewBox="0 0 24 24" class="pl"><path d="M7 4.5v15l13-7.5z"/></svg><svg viewBox="0 0 24 24"><path d="M18 6v12M5 6l10 6-10 6z"/></svg></div></button>` : "";
+    return cal + mus;
   }
   const dock = [["phone", "전화"], ["chrome", "Chrome"], ["messages", "메시지"], ["kakao", "카카오톡"]];
   const appBtn = ([id, label]) => {
@@ -182,6 +185,7 @@
       <div class="dock">${dock.map(appBtn).join("")}</div>
     </section>`);
     el.addEventListener("click", e => {
+      if (e.target.closest("[data-mlink]")) { const L = (P.homeMusic || {}).link; if (L) window.open(L, "_blank", "noopener"); return; }
       const a = e.target.closest("[data-app]"); if (!a) return;
       const fn = OPEN[a.dataset.app];
       if (fn) show(fn(), "app", a.querySelector(".ic"));
