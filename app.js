@@ -276,7 +276,7 @@
     const dev = $("#device"); dev.querySelector(".murmur")?.remove();
     const m = h(`<div class="murmur">${esc(text)}</div>`); dev.appendChild(m);
     requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add("show")));
-    setTimeout(() => { m.classList.remove("show"); setTimeout(() => m.remove(), 1600); }, 4200);
+    setTimeout(() => { m.classList.remove("show"); setTimeout(() => m.remove(), 1600); }, 1400 + 3000);
   }
   /* 키패드: 아무 숫자를 눌러도 정해진 번호(P.keypadNumber)가 한 자리씩 입력됨 */
   function keypadView() {
