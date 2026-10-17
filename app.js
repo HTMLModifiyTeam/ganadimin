@@ -2031,8 +2031,12 @@
     dev.classList.toggle("short", hgt < 800);   // 화면이 짧으면 '검색' 버튼 숨김 (아이콘과 겹치지 않게)
     // 홈 화면: 정사각형 위젯 크기와 앱 줄 높이 (위젯 = 아이콘 두 줄 높이, 화면 안에 다 들어가게)
     const wd = dev.clientWidth || 390, col = (wd - 44) / 4;
-    const W = Math.max(130, Math.min(col * 2 - 12, (hgt - 250) / 5 + 62));
-    dev.style.setProperty("--ws", W.toFixed(1) + "px"); dev.style.setProperty("--rh", (W - 62).toFixed(1) + "px");
+    let W = Math.max(130, Math.min(col * 2 - 12, (hgt - 250) / 5 + 62)), RH = W - 62;
+    if (hgt < 800) {   // 모바일 등 짧은 화면: 상단 여백·독을 줄이고 남는 높이를 앱 줄 간격에 고르게 배분
+      RH = Math.max(84, (hgt - 78 - 92 - 10) / 5);
+      W = Math.min(col * 2 - 12, RH + 62);
+    }
+    dev.style.setProperty("--ws", W.toFixed(1) + "px"); dev.style.setProperty("--rh", RH.toFixed(1) + "px");
   }
   window.addEventListener("resize", fitScale);
   if (window.visualViewport) visualViewport.addEventListener("resize", fitScale);
