@@ -1218,12 +1218,34 @@
         <div data-list>
           <div class="mp-h">즐겨찾기</div>
           <div class="mp-favs">${(M.favorites || []).map((f, i) => `<button data-fav="${i}"><i style="background:${f.color}">${f.icon}</i><b>${esc(f.name)}</b><small>${esc(f.dist)}</small></button>`).join("")}</div>
+          <div class="mp-h">나의 목록</div>
+          <button class="mp-row" data-foodlist><i style="background:#ff9500;color:#fff">🍴</i><div><b>맛집 리스트</b><small>${(M.food || []).length}곳 · 전국</small></div><span class="mp-chev">›</span></button>
           <div class="mp-h">최근 항목</div>
           ${(M.recents || []).map((r, i) => `<button class="mp-row" data-rec="${i}"><i>${r.icon || "📍"}</i><div><b>${esc(r.name)}</b><small>${esc(r.addr)}</small></div></button>`).join("")}
         </div>
       </div>
     </section>`);
-    const card = el.querySelector("[data-card]"), list = el.querySelector("[data-list]"), pin = el.querySelector("[data-pin]");
+    const card = el.querySelector("[data-card]"), list = el.querySelector("[data-list]");
+    let pin = el.querySelector("[data-pin]");
+    const mapBox = el.querySelector(".mp-map"), localMap = mapBox.innerHTML, defaultList = list.innerHTML;
+    // 전국 지도 + 맛집 핀
+    const korea = sel => `<svg class="mp-svg" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid meet">
+      <rect x="-400" y="-200" width="1200" height="1100" fill="#a9d7f4"/>
+      <path d="M118 62 L175 52 L238 40 L292 28 L330 42 L338 120 L346 200 L352 280 L356 360 L350 430 L330 480 L302 518 L262 530 L222 546 L182 540 L142 552 L108 530 L80 500 L68 452 L84 402 L70 352 L90 302 L78 252 L98 202 L88 152 L108 112Z" fill="#eef0e8" stroke="#d6dccd" stroke-width="2"/>
+      <ellipse cx="150" cy="640" rx="42" ry="18" fill="#eef0e8" stroke="#d6dccd" stroke-width="2"/>
+      <circle cx="388" cy="168" r="4" fill="#eef0e8"/>
+      <path d="M108 112 Q160 140 210 120 T300 90" stroke="#c7e6b4" stroke-width="26" fill="none" opacity=".7" stroke-linecap="round"/>
+      <path d="M210 200 Q230 300 270 360" stroke="#c7e6b4" stroke-width="30" fill="none" opacity=".6" stroke-linecap="round"/>
+      ${(M.food || []).map((f, i) => `<g data-fpin="${i}" transform="translate(${f.x} ${f.y})" style="cursor:pointer"><circle r="${sel === i ? 17 : 12}" fill="${sel === i ? "#ff3b30" : "#ff9500"}" stroke="#fff" stroke-width="3"/><text y="5" text-anchor="middle" font-size="${sel === i ? 15 : 11}">🍴</text>${sel === i ? `<text y="-26" text-anchor="middle" font-size="22" font-weight="800" fill="#1c1c1e" stroke="#fff" stroke-width="4" paint-order="stroke">${esc(f.name)}</text>` : ""}</g>`).join("")}
+    </svg>`;
+    const foodList = () => `<div class="mp-fhead"><button data-fback>‹ 목록</button><b>🍴 맛집 리스트</b><span>${(M.food || []).length}곳</span></div>
+      ${(M.food || []).map((f, i) => `<button class="mp-row" data-food="${i}"><i>${f.icon || "🍴"}</i><div><b>${esc(f.name)}</b><small>${esc(f.city)} · ${esc(f.menu)}</small>${f.memo ? `<em>${esc(f.memo)}</em>` : ""}</div></button>`).join("")}`;
+    const enterFood = sel => {
+      mapBox.innerHTML = korea(sel); mapBox.classList.add("food");
+      list.innerHTML = foodList(); list.hidden = false; card.hidden = true;
+      if (sel != null) list.querySelector(`[data-food="${sel}"]`)?.classList.add("on");
+    };
+    const exitFood = () => { mapBox.classList.remove("food"); mapBox.innerHTML = localMap; pin = el.querySelector("[data-pin]"); list.innerHTML = defaultList; card.hidden = true; list.hidden = false; };
     const open = it => {
       pin.hidden = false; pin.style.left = (it.x ?? 50) + "%"; pin.style.top = (it.y ?? 40) + "%";
       card.innerHTML = `<div class="mp-ct"><div><b>${esc(it.name)}</b><small>${esc(it.addr || "")}${it.dist ? " · " + esc(it.dist) : ""}</small></div><button data-cclose>✕</button></div>
@@ -1233,6 +1255,10 @@
     el.addEventListener("click", e => {
       if (e.target.closest("[data-home]")) { goHome(); return; }
       if (e.target.closest("[data-cclose]")) { card.hidden = true; list.hidden = false; pin.hidden = true; return; }
+      if (e.target.closest("[data-foodlist]")) { enterFood(null); return; }
+      if (e.target.closest("[data-fback]")) { exitFood(); return; }
+      const fd = e.target.closest("[data-food]") || e.target.closest("[data-fpin]");
+      if (fd) { const i = +(fd.dataset.food ?? fd.dataset.fpin); enterFood(i); list.querySelector(`[data-food="${i}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }); return; }
       const f = e.target.closest("[data-fav]"); if (f) { open(M.favorites[+f.dataset.fav]); return; }
       const r = e.target.closest("[data-rec]"); if (r) open(M.recents[+r.dataset.rec]);
     });
