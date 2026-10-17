@@ -2031,11 +2031,12 @@
     dev.classList.toggle("short", hgt < 800);   // 화면이 짧으면 '검색' 버튼 숨김 (아이콘과 겹치지 않게)
     // 홈 화면: 정사각형 위젯 크기와 앱 줄 높이 (위젯 = 아이콘 두 줄 높이, 화면 안에 다 들어가게)
     const wd = dev.clientWidth || 390, col = (wd - 44) / 4;
-    let W = Math.max(130, Math.min(col * 2 - 12, (hgt - 250) / 5 + 62)), RH = W - 62;
-    if (hgt < 800) {   // 모바일 등 짧은 화면: 상단 여백·독을 줄이고 남는 높이를 앱 줄 간격에 고르게 배분
-      RH = Math.max(84, (hgt - 78 - 92 - 10) / 5);
-      W = Math.min(col * 2 - 12, RH + 62);
-    }
+    // 아이콘(I) + 이름 + 줄 간격 = 줄 높이(RH), 위젯 = RH + I (위젯 위·아래가 아이콘 줄과 맞음)
+    const short = hgt < 800, top = short ? 78 : 84, dockR = short ? 102 : 136;
+    const Iw = Math.min(66, (col * 2 - 12 - 36) / 2);              // 가로 폭 기준 자연스러운 아이콘 크기
+    const RH = Math.max(80, Math.min(Iw + 36, (hgt - top - dockR) / 5));  // 세로가 모자라면 줄 높이를 줄임
+    const I = Math.max(50, Math.min(66, RH - 36)), W = RH + I;
+    dev.style.setProperty("--ic", I.toFixed(1) + "px");
     dev.style.setProperty("--ws", W.toFixed(1) + "px"); dev.style.setProperty("--rh", RH.toFixed(1) + "px");
   }
   window.addEventListener("resize", fitScale);
