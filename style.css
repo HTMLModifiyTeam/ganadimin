@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170942") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610170944") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
@@ -948,3 +948,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .murmur.show{opacity:.85;transform:none}
 .kp-num{flex-direction:column;align-items:center;justify-content:flex-end}
 .kp-num small{font-size:15px;color:#007aff;margin-top:6px;min-height:20px}
+.note-body .nline{min-height:1.7em}
+.nchk{display:flex;align-items:flex-start;gap:10px;padding:3px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nchk .nbox{flex:none;width:20px;height:20px;margin-top:4px;border-radius:5px;border:2px solid #c7c7cc;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.nchk .nbox svg{width:14px;height:14px;opacity:0;transition:opacity .15s}
+.nchk span{transition:color .15s}
+.nchk.on .nbox{background:#f7b500;border-color:#f7b500}
+.nchk.on .nbox svg{opacity:1}
+.nchk.on span{color:#8e8e93;text-decoration:line-through}

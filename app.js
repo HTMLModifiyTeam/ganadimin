@@ -813,13 +813,24 @@
     el.addEventListener("click", e => { const c = e.target.closest("[data-note]"); if (c) show(noteDetail(P.notes[+c.dataset.note]), "push"); });
     return el;
   }
+  /* 메모 본문: "☐ "로 시작하는 줄은 눌러서 체크할 수 있는 체크리스트 */
+  function noteBodyHTML(n) {
+    n.done = n.done || {};
+    return n.body.split("\n").map((line, i) => line.startsWith("☐")
+      ? `<div class="nchk${n.done[i] ? " on" : ""}" data-ci="${i}"><i class="nbox"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i><span>${esc(line.replace(/^☐\s*/, ""))}</span></div>`
+      : `<div class="nline">${esc(line) || "&nbsp;"}</div>`).join("");
+  }
   function noteDetail(n) {
     const el = h(`<section class="screen white">
       <div class="navbar"><button class="pill round" data-back>${ic.back}</button><span class="pill" style="gap:6px;padding:0 6px">${ic.undo.replace("<svg", '<svg style="margin:0 6px"')}${ic.share.replace("<svg", '<svg style="margin:0 6px"')}${ic.more.replace("<svg", '<svg style="margin:0 6px"')}</span></div>
-      <div class="scroll"><div class="note-body"><div class="note-title">${esc(n.title)}</div>${esc(n.body)}</div></div>
+      <div class="scroll"><div class="note-body"><div class="note-title">${esc(n.title)}</div>${noteBodyHTML(n)}</div></div>
       <div class="note-tools"><span class="grp">${ic.check}${ic.clip}${ic.pen}</span><span class="grp">${ic.compose}</span></div>
     </section>`);
     el.querySelector("[data-back]").onclick = back;
+    el.addEventListener("click", e => {
+      const c = e.target.closest("[data-ci]"); if (!c) return;
+      const i = +c.dataset.ci; n.done[i] = !n.done[i]; c.classList.toggle("on", n.done[i]);
+    });
     return el;
   }
 
