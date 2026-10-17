@@ -165,11 +165,13 @@ window.PHONE = {
   /* 앱 아이콘을 직접 고른 이미지로 바꾸기
      img 폴더에 이미지(정사각형 png/jpg 권장)를 넣고 "img/파일명.png" 로 적으세요.
      비워두면("") 기본 아이콘. 캘린더·시계를 이미지로 바꾸면 날짜·시곗바늘은 움직이지 않아요. */
+  /* 동그란 아이콘 (네모 배경 없이 그림 그대로) */
+  iconRound: ["chrome"],
   icons: {
     /* img 폴더에 insta.png, photos.png 를 올리면 그 이미지로 바뀜 (.jpg도 됨). 없으면 기본 아이콘 */
     calendar: "", photos: "img/photos.jpg", camera: "img/camera.jpg", clock: "",
     notes: "", mail: "", weather: "", insta: "img/insta.svg", blockblast: "", mines: "", maps: "img/maps.jpg",
-    phone: "", chrome: "img/chrome.jpg", messages: "", kakao: ""
+    phone: "", chrome: "img/chrome.png", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   /* 잠금화면 위젯: dday(월-일 기준 남은 날), music(곡 제목), alarm(다음 알람) */
   /* 홈 화면 음악 위젯 (누르면 link로 이동) */

@@ -175,7 +175,7 @@
   const dock = [["phone", "전화"], ["chrome", "Chrome"], ["messages", "메시지"], ["kakao", "카카오톡"]];
   const appBtn = ([id, label]) => {
     const b = P.badges[id];
-    return `<button class="app" data-app="${id}"><div class="ic">${(P.icons || {})[id] ? iconImg(P.icons[id], id) : I[id]}</div>${b ? `<em class="badge" data-badge="${id}">${b}</em>` : ""}<span>${esc(label)}</span></button>`;
+    return `<button class="app" data-app="${id}"><div class="ic${(P.iconRound || []).includes(id) && (P.icons || {})[id] ? " round" : ""}">${(P.icons || {})[id] ? iconImg(P.icons[id], id) : I[id]}</div>${b ? `<em class="badge" data-badge="${id}">${b}</em>` : ""}<span>${esc(label)}</span></button>`;
   };
   /* 아이콘 이미지: 파일이 없으면 .jpg로 한 번 더 찾아보고, 그래도 없으면 기본 아이콘 */
   function iconImg(src, id) {
