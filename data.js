@@ -167,8 +167,8 @@ window.PHONE = {
      비워두면("") 기본 아이콘. 캘린더·시계를 이미지로 바꾸면 날짜·시곗바늘은 움직이지 않아요. */
   icons: {
     /* img 폴더에 insta.png, photos.png 를 올리면 그 이미지로 바뀜 (.jpg도 됨). 없으면 기본 아이콘 */
-    calendar: "", photos: "img/photos.png", camera: "", clock: "",
-    notes: "", mail: "", weather: "", insta: "img/insta.png", blockblast: "", mines: "",
+    calendar: "", photos: "img/photos.jpg", camera: "", clock: "",
+    notes: "", mail: "", weather: "", insta: "img/insta.svg", blockblast: "", mines: "",
     phone: "", chrome: "", messages: "", kakao: ""
   },          // 휴대폰 속 오늘 날짜 (캘린더 아이콘·캘린더 앱 기준)
   /* 잠금화면 위젯: dday(월-일 기준 남은 날), music(곡 제목), alarm(다음 알람) */
