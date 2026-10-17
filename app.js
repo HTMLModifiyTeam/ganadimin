@@ -529,19 +529,23 @@
     </section>`);
     el.querySelector("[data-back]").onclick = back;
     el.querySelectorAll("[data-callme]").forEach(b => { b.style.cursor = "pointer"; b.onclick = () => outgoingCall(name); });
-    // 이 방에 머무는 동안 불규칙하게 (최소 8초 간격) 화면이 깜빡이거나 글리치
+    // 이 방에 머무는 동안 불규칙하게 (2~15초 간격) 화면이 꺼질 듯 어두워졌다 밝아짐
     if ((P.messages.haunted || []).includes(name)) {
+      const dim = (n) => {
+        if (!el.isConnected) return;
+        const down = 40 + Math.random() * 520, hold = 30 + Math.random() * 380, up = 60 + Math.random() * 700;
+        el.style.transition = `filter ${down}ms ease-in`;
+        el.style.filter = `brightness(${(.22 + Math.random() * .33).toFixed(2)})`;
+        setTimeout(() => {
+          el.style.transition = `filter ${up}ms ease-out`; el.style.filter = "";
+          if (n > 1) setTimeout(() => dim(n - 1), up * (.3 + Math.random() * .6));   // 연달아 한두 번 더 휘청
+        }, down + hold);
+      };
       const loop = () => setTimeout(() => {
         if (!el.isConnected) return;
-        if (stack[stack.length - 1] === el && !callEl && layer.classList.contains("open")) {
-          if (Math.random() < .5) {   // 짧은 깜빡임
-            const n = 1 + (Math.random() * 3 | 0); let k = 0;
-            const blink = () => { el.style.filter = Math.random() < .5 ? "brightness(.15)" : "invert(.85)"; setTimeout(() => { el.style.filter = ""; if (++k < n) setTimeout(blink, 40 + Math.random() * 120); }, 40 + Math.random() * 90); };
-            blink();
-          } else { try { noiseBurst(.18 + Math.random() * .2); } catch (x) {} flicker(160 + Math.random() * 260); }
-        }
+        if (stack[stack.length - 1] === el && !callEl && layer.classList.contains("open")) dim(Math.random() < .35 ? 2 + (Math.random() * 2 | 0) : 1);
         loop();
-      }, 8000 + Math.random() * 14000);
+      }, 2000 + Math.random() * 13000);
       loop();
     }
     wireComposer(el, text => {
