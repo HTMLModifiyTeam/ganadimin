@@ -465,6 +465,18 @@
       if (messagesListEl && messagesListEl.isConnected) messagesListEl.querySelector("[data-threads]").innerHTML = threadsHTML();
       // 답장하면 그 번호에서 먼저 전화가 옴 (한 번만)
       const RC = (P.messages.replyCall || {})[name], cs = (P.callScripts || {})[name];
+      // 통화한 뒤에는: 답장이 왔다가 0.8초 뒤 잡음과 함께 사라짐 (보낼 때마다)
+      if (RC && cs && cs._used) {
+        setTimeout(() => {
+          if (!el.isConnected) return;
+          const L = RC.ghost || ["…"], txt = L[(RC._g = (RC._g ?? -1) + 1) % L.length];
+          const b = h(`<div class="bub them${sms ? " sms" : ""} ghost">${esc(txt)}</div>`);
+          el.querySelector(".imsg").appendChild(b); try { msgTone(); } catch (x) {}
+          const sc = el.querySelector(".scroll"); sc.scrollTop = sc.scrollHeight;
+          setTimeout(() => { try { noiseBurst(.35); } catch (x) {} b.classList.add("vanish"); setTimeout(() => b.remove(), 380); }, 800);
+        }, RC.ghostDelay || 1600);
+        return;
+      }
       if (RC && cs && !cs._used && !RC._fired) {
         RC._fired = true;
         setTimeout(() => { if (!callEl) incomingCall({ from: name, ringSeconds: 30, lineStart: 1100, hangUpAfter: 900, lines: cs.lines, ambience: cs.ambience, onAnswer: () => { cs._used = true; } }); }, RC.delay || 3000);
