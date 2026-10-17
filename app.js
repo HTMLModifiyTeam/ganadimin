@@ -1205,8 +1205,9 @@
     const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(((id.match(/[a-z0-9가-힣]/i) || [id[0]])[0]).toUpperCase())}</span>`;
     const story = s => `<div class="ig-story${s.seen ? " seen" : ""}"><div class="ring">${s.me ? avatar(P.insta.me || "me", true) + '<b class="add">+</b>' : avatar(s.id, true)}</div><small>${esc(s.me ? "내 스토리" : s.id)}</small></div>`;
     const post = (q, i, mine) => `<article class="ig-post">
-      <header><span class="ig-ring">${avatar(q.id)}</span><div><b>${esc(q.id)}${q.verified ? II.verified : ""}</b>${q.music ? `<small>${II.note}${esc(q.music)}</small>` : q.place ? `<small>${esc(q.place)}</small>` : ""}</div>${q.follow ? `<span class="ig-follow">팔로우</span>` : ""}<span class="mo">${mine ? II.more : II.menu}</span></header>
-      <div class="ig-img" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}</div>
+      <header><span class="ig-ring">${avatar(q.id)}</span><div><b>${esc(q.id)}${q.verified ? II.verified : ""}</b>${q.ad ? `<small>광고</small>` : q.music ? `<small>${II.note}${esc(q.music)}</small>` : q.place ? `<small>${esc(q.place)}</small>` : ""}</div>${q.follow ? `<span class="ig-follow">팔로우</span>` : ""}<span class="mo">${mine ? II.more : II.menu}</span></header>
+      <div class="ig-img" style="${q.img ? `background:url('${esc(q.img)}') center/cover` : `background:${q.bg}`}">${q.img ? "" : `<span>${q.emoji || ""}</span>`}${q.headline ? `<b class="ig-adh">${esc(q.headline)}</b>` : ""}</div>
+      ${q.ad ? `<div class="ig-cta"><span>${esc(q.cta || "더 알아보기")}</span><i>›</i></div>` : ""}
       <div class="ig-act">${mine ? II.heart : `<button data-like="${i}">${II.heart}</button>`}${II.com}${II.send}<span style="flex:1"></span>${II.save}</div>
       <div class="ig-txt"><b ${mine ? "" : `data-likes="${i}"`}>좋아요 ${q.likes.toLocaleString()}개</b>
         <p><b>${esc(q.id)}</b> ${esc(q.caption)}</p>

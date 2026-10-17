@@ -1099,6 +1099,8 @@ window.PHONE = {
     posts: [
       { id: "seoul_foodie.log", verified: true, follow: true, music: "잔나비 · 주저하는 연인들을 위해", bg: "linear-gradient(160deg,#f6d365,#fda085)", emoji: "🍲", likes: 1284, comments: 46, when: "1시간 전",
         caption: "비 오는 날엔 역시 뜨끈한 국물 🥹 교대역 3분 거리, 웨이팅 20분 각오하세요 #교대맛집 #국밥" },
+      { id: "maison.aurel", verified: true, ad: true, bg: "linear-gradient(160deg,#1c1c1e 0%,#3a3226 55%,#c9a96e 100%)", emoji: "💍", headline: "평생 단 하나의 약속", cta: "지금 구매하기", likes: 3417, comments: 0, when: "광고",
+        caption: "18K 솔리테어 링 컬렉션 ✨ 프러포즈를 앞둔 당신을 위한 단 하나의 반지. 무료 각인 · 맞춤 사이즈 · 프라이빗 상담 예약 #프러포즈링 #웨딩링" },
       { id: "hanriver_runner", place: "반포한강공원", bg: "linear-gradient(180deg,#ff9a8b 0%,#ff6a88 45%,#2b2d5c 100%)", emoji: "🏃‍♂️", likes: 532, comments: 12, when: "3시간 전",
         caption: "오늘도 10km 완료. 노을 보면서 뛰는 게 제일 좋음 🌇 #러닝 #한강러닝 #오운완" },
       { id: "mung.daily", bg: "linear-gradient(160deg,#fbe9d7,#f6d5b8)", emoji: "🐈", likes: 8920, comments: 213, when: "5시간 전",
