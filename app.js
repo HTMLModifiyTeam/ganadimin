@@ -164,13 +164,13 @@
     return evs.filter(e => e.d.getTime() > now || (e.d.getTime() === now && e.start > t))
       .sort((a, b) => a.d - b.d || a.start.localeCompare(b.start)).slice(0, n);
   }
-  function widgetHTML() {
+  function widgetHTML(which) {
     const list = nextEvents(2);
     const col = c => ((P.calendar && P.calendar.calendars) || {})[c] || "#8e8e93";
     const MW = P.homeMusic;
     const cal = `<button class="widget sq" data-app="calendar"><div class="wg-top"><small>${WD[TODAY.getDay()]}요일</small><b>${TODAY.getDate()}</b></div><div class="wg-list">${list.length ? list.map(e => `<div class="wg-ev"><i style="background:${col(e.cal)}"></i><div><b>${esc(e.title)}</b><small>${e.d.getMonth() + 1}/${e.d.getDate()} ${esc(e.start || "")}</small></div></div>`).join("") : `<div class="wg-none">일정 없음</div>`}</div></button>`;
     const mus = MW ? `<button class="widget sq mw" data-mlink><div class="mw-head"><div class="mw-art">${MW.cover ? `<img src="${esc(MW.cover)}" alt="">` : "<span>♪</span>"}</div><svg class="mw-note" viewBox="0 0 24 24"><path d="M9 18V5.5l11-2V16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.8" fill="currentColor"/><circle cx="17.5" cy="16" r="2.8" fill="currentColor"/></svg></div><div class="mw-t"><b>${esc(MW.title)}</b><small>${esc(MW.artist)}</small></div><span class="mw-pause"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>일시 정지</span></button>` : "";
-    return cal + mus;
+    return which === "cal" ? cal : which === "music" ? mus : cal + mus;
   }
   const dock = [["phone", "전화"], ["chrome", "Chrome"], ["messages", "메시지"], ["kakao", "카카오톡"]];
   const appBtn = ([id, label]) => {
@@ -180,7 +180,7 @@
   function homeScreen() {
     const el = h(`<section class="screen home" data-dark="0">
       <button class="back-to-book" data-close>‹ 본문으로</button>
-      <div class="grid">${apps.slice(0, 8).map(appBtn).join("")}${widgetHTML()}${apps.slice(8).map(appBtn).join("")}</div>
+      <div class="grid">${widgetHTML("cal")}${apps.slice(0, 8).map(appBtn).join("")}${widgetHTML("music")}${apps.slice(8).map(appBtn).join("")}</div>
       <div class="spot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>검색</div>
       <div class="dock">${dock.map(appBtn).join("")}</div>
     </section>`);
