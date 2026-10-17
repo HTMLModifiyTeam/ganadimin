@@ -614,7 +614,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-bottom{bottom:calc(58px*var(--s))}
 
 /* ===== 강민재 휴대폰: 밝은 배경화면 ===== */
-.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610171042") center/cover no-repeat}
+.home,.lock{background:#e9dcc3 url("img/wallpaper.jpg?v=202610171045") center/cover no-repeat}
 .home:before{background:none}
 .app{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45)}
 .app .ic{box-shadow:0 2px 10px rgba(0,0,0,.12)}
