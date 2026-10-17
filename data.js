@@ -526,7 +526,7 @@ window.PHONE = {
       ]
     },
     /* 여기 적힌 방은 한 바퀴 돈 뒤에도 처음부터 다시 답장 */
-    anyRepliesLoop: ["수일이형"],
+    anyRepliesLoop: [],
     /* 이 말을 보내면 상대에게서 전화가 걸려옴 */
     callTriggers: {
       "변호사님❤️": [ { contains: true, match: ["형"], delay: 2500, call: {
