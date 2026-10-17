@@ -285,7 +285,7 @@
     const fmtNum = k => { let out = "", c = 0; for (const ch of target) { if (/\d/.test(ch)) { if (c >= k) break; c++; out += ch; } else if (c < k) out += ch; } return out.replace(/-$/, ""); };
     const keys = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]];
     const el = h(`<section class="screen white kp">
-      <div class="kp-num"><span data-num></span></div>
+      <div class="kp-num"><span data-num></span><small data-sub></small></div>
       <div class="kp-grid">${keys.map(([k, s]) => `<button data-kk="${k}"><b>${k}</b>${s ? `<small>${s}</small>` : ""}</button>`).join("")}</div>
       <div class="kp-row"><span></span><button class="kp-call" data-kcall><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="#fff"/></svg></button><button class="kp-del" data-kdel hidden>⌫</button></div>
       <nav class="tabbar">
@@ -297,13 +297,25 @@
       </nav>
     </section>`);
     const numEl = el.querySelector("[data-num]"), del = el.querySelector("[data-kdel]");
-    const draw = () => { numEl.textContent = fmtNum(n); del.hidden = n === 0; };
+    const SD = P.speedDial || {}, subEl = el.querySelector("[data-sub]");
+    let speed = null;   // 처음에 단축번호 숫자를 누르면 그 사람이 뜸
+    const draw = () => {
+      numEl.textContent = speed ? speed.key : fmtNum(n); del.hidden = !speed && n === 0;
+      subEl.textContent = speed ? `단축번호 ${speed.key} · ${speed.name}` : "";
+    };
     el.addEventListener("click", e => {
       if (e.target.closest("[data-recent]")) { back(); return; }
       if (e.target.closest("[data-vmail]")) { show(voicemailView(), "push"); return; }
-      if (e.target.closest("[data-kk]")) { if (n < digits.length) { n++; draw(); try { keyTone(); } catch (x) {} } return; }
-      if (e.target.closest("[data-kdel]")) { if (n) { n--; draw(); } return; }
-      if (e.target.closest("[data-kcall]") && n === digits.length && n) outgoingCall(target);
+      const kk = e.target.closest("[data-kk]");
+      if (kk) {
+        try { keyTone(); } catch (x) {}
+        if (!speed && n === 0 && SD[kk.dataset.kk]) { speed = { key: kk.dataset.kk, name: SD[kk.dataset.kk] }; draw(); return; }
+        if (speed) speed = null;
+        if (n < digits.length) n++;
+        draw(); return;
+      }
+      if (e.target.closest("[data-kdel]")) { if (speed) speed = null; else if (n) n--; draw(); return; }
+      if (e.target.closest("[data-kcall]")) { if (speed) outgoingCall(speed.name); else if (n === digits.length && n) outgoingCall(target); }
     });
     draw();
     return el;
