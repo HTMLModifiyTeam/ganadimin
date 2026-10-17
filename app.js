@@ -1684,8 +1684,8 @@
           lineEl.classList.toggle("me", l.who === "me");
           lineEl.classList.add("show");
         }, at));
-        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); flicker(1300); stopSea(true); }, at + 500));
-        timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 1300 : 0)));
+        if (l.noise) timers.push(setTimeout(() => { noiseBurst(.9); flicker(900); stopSea(true); }, at + 500));
+        timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 900 : 0)));
         return;
       }
       timers.push(setTimeout(() => {
