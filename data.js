@@ -30,11 +30,11 @@ window.PHONE = {
   /* 음성 사서함 (위에서부터 최신순). sea: 재생할 때 파도 소리, transcript: 재생하면 차례로 나타나는 텍스트 변환 */
   voicemail: [
     { from: "011-617-1201", date: "2026. 6. 17.", length: "0:09", new: true, sea: true,
-      transcript: ["(파도 소리)", "……", "…선배님.", "", "하아…"] },
+      transcript: ["……", "…선배님.", ""] },
     { from: "011-617-1201", date: "2023. 10. 18.", length: "0:14", new: true, sea: true,
       transcript: ["……", "목소리라도,", "들려주시면 좋을 텐데…"] },
     { from: "011-617-1201", date: "2019. 7. 19.", length: "0:06", sea: true,
-      transcript: ["(잡음)", "…거기도 비가 오나."] },
+      transcript: ["……", "…거기도 비가 오나."] },
     { from: "011-617-1201", date: "2008. 3. 7.", length: "0:07", sea: true,
       transcript: ["……", "선배님?"] }
   ],
