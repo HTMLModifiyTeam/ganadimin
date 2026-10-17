@@ -1189,12 +1189,18 @@
       more: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>`
     };
     const send = S('<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M21 3 10 13"/>');
+    // 빨간 점: 안 읽은 DM이 있으면 DM 아이콘에, 프로필을 한 번도 안 봤으면 프로필에
+    const dmDot = () => (G.dms || []).some(d => d.unread);
+    const refreshDots = () => document.querySelectorAll(".ig-tab").forEach(t => {
+      t.querySelector("[data-dm]")?.classList.toggle("dot", dmDot());
+      t.querySelector("[data-pdot]")?.classList.toggle("dot", !G._profSeen);
+    });
     const tabBar = on => `<nav class="ig-tab">
       <button class="${on === "home" ? "on" : ""}" ${on === "home" ? "" : "data-back"}>${II.home}</button>
       <span>${II.reels}</span>
-      <button data-dm class="dot">${send}</button>
+      <button data-dm class="${dmDot() ? "dot" : ""}">${send}</button>
       <span>${II.search}</span>
-      <button class="dot${on === "me" ? " me-on" : ""}" ${on === "me" ? "" : "data-profile"}>${avatar(G.me || "me")}</button>
+      <button class="${G._profSeen ? "" : "dot"}${on === "me" ? " me-on" : ""}" data-pdot ${on === "me" ? "" : "data-profile"}>${avatar(G.me || "me")}</button>
     </nav>`;
     const avatar = (id, big) => `<span class="ig-av${big ? " big" : ""}" style="background:hsl(${[...id].reduce((a, c) => a + c.charCodeAt(0), 0) % 360} 55% 62%)">${esc(((id.match(/[a-z0-9가-힣]/i) || [id[0]])[0]).toUpperCase())}</span>`;
     const story = s => `<div class="ig-story${s.seen ? " seen" : ""}"><div class="ring">${s.me ? avatar(P.insta.me || "me", true) + '<b class="add">+</b>' : avatar(s.id, true)}</div><small>${esc(s.me ? "내 스토리" : s.id)}</small></div>`;
@@ -1283,7 +1289,7 @@
         if (e.target.closest("[data-back]")) { back(); return; }
         const r = e.target.closest("[data-dmi]"); if (!r) return;
         const c = D[+r.dataset.dmi];
-        if (c.unread) { c.unread = false; r.classList.remove("unread"); r.querySelector("i")?.remove(); }
+        if (c.unread) { c.unread = false; r.classList.remove("unread"); r.querySelector("i")?.remove(); refreshDots(); }
         show(dmRoom(c), "push");
       });
       return v;
@@ -1301,6 +1307,7 @@
       return v;
     }
     function profileView() {
+      G._profSeen = true; setTimeout(refreshDots, 0);
       const M = G.profile || {}, list = M.posts || [];
       const v = h(`<section class="screen ig">
         <div class="ig-top"><button class="ig-back" data-back>${ic.back}</button><span class="ig-uname">${esc(G.me || "")}</span><span class="ig-ti">${II.plus}${II.more}</span></div>
