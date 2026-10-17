@@ -175,8 +175,13 @@
   const dock = [["phone", "전화"], ["chrome", "Chrome"], ["messages", "메시지"], ["kakao", "카카오톡"]];
   const appBtn = ([id, label]) => {
     const b = P.badges[id];
-    return `<button class="app" data-app="${id}"><div class="ic">${(P.icons || {})[id] ? `<img src="${esc(P.icons[id])}" alt="">` : I[id]}</div>${b ? `<em class="badge" data-badge="${id}">${b}</em>` : ""}<span>${esc(label)}</span></button>`;
+    return `<button class="app" data-app="${id}"><div class="ic">${(P.icons || {})[id] ? iconImg(P.icons[id], id) : I[id]}</div>${b ? `<em class="badge" data-badge="${id}">${b}</em>` : ""}<span>${esc(label)}</span></button>`;
   };
+  /* 아이콘 이미지: 파일이 없으면 .jpg로 한 번 더 찾아보고, 그래도 없으면 기본 아이콘 */
+  function iconImg(src, id) {
+    const alt = src.replace(/\.png$/i, ".jpg");
+    return `<img src="${esc(src)}" alt="" style="width:100%;height:100%;object-fit:cover" data-alt="${esc(alt)}" onerror="if(this.dataset.alt&&this.src.indexOf(this.dataset.alt)<0){this.src=this.dataset.alt}else{this.style.display='none';this.nextElementSibling.style.display='contents'}"><span style="display:none">${I[id]}</span>`;
+  }
   function homeScreen() {
     const el = h(`<section class="screen home" data-dark="0">
       <button class="back-to-book" data-close>‹ 본문으로</button>
