@@ -709,6 +709,14 @@
           el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove());
         }, 900);
         rule.replies.forEach(r => { setTimeout(() => deliverKakao(name, r), wait); wait += 1300; });
+        return;
+      }
+      // 무슨 말을 보내도 돌아오는 답장 (차례대로 돌아가며)
+      const AR = (K.anyReplies || {})[name];
+      if (AR && AR.length) {
+        setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
+        const r = AR[(AR._i = ((AR._i ?? -1) + 1)) % AR.length];
+        let wait = 1600; (Array.isArray(r) ? r : [r]).forEach(x => { setTimeout(() => deliverKakao(name, x), wait); wait += 1300; });
       }
     });
     return el;
