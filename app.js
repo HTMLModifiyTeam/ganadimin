@@ -340,10 +340,21 @@
   /* 지직거리는 잡음 (통화가 강제로 끊길 때) */
   function noiseBurst(sec = 1.2) {
     if (!audioCtx) return;
-    const len = audioCtx.sampleRate * sec, buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (Math.random() < .3 ? 1 : .35);
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    // 지직-: 끊겼다 이어지는 거친 잡음
+    const sr = audioCtx.sampleRate, len = Math.floor(sr * sec), buf = audioCtx.createBuffer(1, len, sr), d = buf.getChannelData(0);
+    let on = true, seg = 0, hold = 0, v = 0;
+    for (let i = 0; i < len; i++) {
+      if (--seg <= 0) { on = Math.random() < .75; seg = Math.floor(sr * (.01 + Math.random() * .06)); }
+      if (--hold <= 0) { v = Math.random() * 2 - 1; hold = 1 + Math.floor(Math.random() * 6); }   // 샘플 홀드로 거친 질감
+      d[i] = on ? v * (Math.random() < .15 ? 1 : .6) : 0;
+    }
     const s = audioCtx.createBufferSource(), g = audioCtx.createGain(); s.buffer = buf; s.connect(g); g.connect(audioCtx.destination);
-    g.gain.setValueAtTime(.12, audioCtx.currentTime); g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + sec); s.start();
+    const t = audioCtx.currentTime; g.gain.setValueAtTime(.32, t); g.gain.setValueAtTime(.32, t + sec * .8); g.gain.linearRampToValueAtTime(0, t + sec); s.start();
+  }
+  /* 화면 깜빡임 (흔들림 없이) */
+  function flicker(ms = 1300) {
+    const dev = $("#device"); dev.classList.add("flicker"); setTimeout(() => dev.classList.remove("flicker"), ms);
   }
 
   /* ================= 크롬 ================= */
@@ -473,7 +484,7 @@
           const b = h(`<div class="bub them${sms ? " sms" : ""} ghost">${esc(txt)}</div>`);
           el.querySelector(".imsg").appendChild(b); try { msgTone(); } catch (x) {}
           const sc = el.querySelector(".scroll"); sc.scrollTop = sc.scrollHeight;
-          setTimeout(() => { try { noiseBurst(.35); } catch (x) {} b.remove(); }, 800);
+          setTimeout(() => { try { noiseBurst(.35); } catch (x) {} flicker(350); b.remove(); }, 800);
         }, RC.ghostDelay || 1600);
         return;
       }
@@ -1638,7 +1649,7 @@
           lineEl.classList.toggle("me", l.who === "me");
           lineEl.classList.add("show");
         }, at));
-        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); stopSea(true); }, at + 500));
+        if (l.noise) timers.push(setTimeout(() => { noiseBurst(1.3); flicker(1300); stopSea(true); }, at + 500));
         timers.push(setTimeout(() => onEnd(true, l.endLabel), at + (l.cutAfter || 1000) + (l.noise ? 1300 : 0)));
         return;
       }
@@ -1892,6 +1903,7 @@
   const ANDROID = /Android/i.test(navigator.userAgent);
   function enterFull() { if (!ANDROID || document.fullscreenElement) return; try { const r = document.documentElement.requestFullscreen?.({ navigationUI: "hide" }); r && r.catch(() => {}); } catch (e) {} }
   function exitFull() { if (!document.fullscreenElement) return; try { const r = document.exitFullscreen?.(); r && r.catch(() => {}); } catch (e) {} }
+  document.addEventListener("pointerdown", () => { try { if (audioCtx && audioCtx.state === "suspended") audioCtx.resume(); } catch (e) {} }, true);
   function openPhone() {
     if (layer.classList.contains("open")) return;
     enterFull();
