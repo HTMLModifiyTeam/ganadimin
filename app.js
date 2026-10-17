@@ -180,7 +180,7 @@
   function homeScreen() {
     const el = h(`<section class="screen home" data-dark="0">
       <button class="back-to-book" data-close>‹ 본문으로</button>
-      <div class="grid">${widgetHTML()}${apps.map(appBtn).join("")}</div>
+      <div class="grid">${apps.slice(0, 8).map(appBtn).join("")}${widgetHTML()}${apps.slice(8).map(appBtn).join("")}</div>
       <div class="spot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>검색</div>
       <div class="dock">${dock.map(appBtn).join("")}</div>
     </section>`);
