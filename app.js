@@ -712,6 +712,7 @@
       <div class="kcomp"><label class="field"><span class="plus">+</span><input data-input enterkeyhint="send" autocomplete="off" placeholder="메시지 입력"><span class="hash">#</span><button class="ksend" data-send aria-label="전송"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="#3c1e1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></label></div>
     </section>`);
     el.dataset.room = name;
+    el._rename = n => { name = n; };
     el.querySelector("[data-back]").onclick = back;
     wireComposer(el, typed => {
       let SC = (P.kakao.scripted || {})[name];
@@ -761,7 +762,7 @@
       const callRule = ((K.callTriggers || {})[name] || []).find(hit);
       if (callRule) {
         setTimeout(() => { msgs.forEach(m => { if (m.me) delete m.unread; }); el.querySelectorAll(".kline.me .kmeta i").forEach(x => x.remove()); }, 900);
-        setTimeout(() => { if (!callEl) incomingCall(callRule.call); }, callRule.delay || 2500);
+        setTimeout(() => { if (!callEl) incomingCall(callRule.call.renameTo ? { ...callRule.call, onEnd: () => renameContact(name, callRule.call.renameTo) } : callRule.call); }, callRule.delay || 2500);
         return;
       }
       if (rule) {
@@ -1695,6 +1696,25 @@
     try { navigator.vibrate && navigator.vibrate([700, 300, 700]); } catch (e) {}
   }
   function stopRing() { clearInterval(ringTimer); ringTimer = null; try { navigator.vibrate && navigator.vibrate(0); } catch (e) {} }
+  /* 저장명 바꾸기: 데이터 전체(카톡·전화·음성 사서함·캘린더 등)와 지금 열려 있는 화면의 이름을 한꺼번에 변경 */
+  function renameContact(oldN, newN) {
+    if (!oldN || !newN || oldN === newN) return;
+    const seen = new WeakSet();
+    const walk = o => {
+      if (!o || typeof o !== "object" || seen.has(o) || o instanceof Node) return; seen.add(o);
+      if (Array.isArray(o)) { o.forEach((v, i) => { if (v === oldN) o[i] = newN; else walk(v); }); return; }
+      for (const k of Object.keys(o)) {
+        let v = o[k];
+        if (v === oldN) o[k] = v = newN; else walk(v);
+        if (k === oldN) { o[newN] = v; delete o[k]; }
+      }
+    };
+    walk(P);
+    const dev = $("#device"), tw = document.createTreeWalker(dev, NodeFilter.SHOW_TEXT);
+    for (let n; (n = tw.nextNode());) if (n.nodeValue.trim() === oldN) n.nodeValue = n.nodeValue.replace(oldN, newN);
+    dev.querySelectorAll("*").forEach(e => { for (const at of [...e.attributes]) if (at.value === oldN) e.setAttribute(at.name, newN); if (e._rename && e.dataset.room === newN) e._rename(newN); });
+    try { refreshCalls(); } catch (e) {}
+  }
   function logCall(name, missed) {
     const last = P.calls[0];
     if (last && last.name === name && !!last.missed === !!missed && last.dir === "in" && last.when === P.time) last.count = (last.count || 1) + 1;
@@ -1759,7 +1779,7 @@
       callEl.querySelectorAll('[data-key="mute"],[data-key="audio"]').forEach(k => k.onclick = () => k.classList.toggle("on"));
       const lineEl = callEl.querySelector("[data-line]"), timers = [];
       let ended = false;
-      const endCall = (cut, lab) => { if (ended) return; ended = true; timers.forEach(clearTimeout); clearInterval(callTimer); if (cut !== true) lineEl.classList.remove("show"); logCall(name, false); tEl.textContent = lab || "통화 종료"; setTimeout(closeCall, cut === true ? 1600 : 900); };
+      const endCall = (cut, lab) => { if (ended) return; ended = true; timers.forEach(clearTimeout); clearInterval(callTimer); if (cut !== true) lineEl.classList.remove("show"); logCall(name, false); tEl.textContent = lab || "통화 종료"; setTimeout(closeCall, cut === true ? 1600 : 900); if (C.onEnd) setTimeout(C.onEnd, cut === true ? 1700 : 1000); };
       callEl.querySelector("[data-end]").onclick = () => endCall();
       if (C.onAnswer) C.onAnswer();
       if (C.ambience === "sea") startSea();

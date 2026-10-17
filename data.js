@@ -573,7 +573,7 @@ window.PHONE = {
     /* 이 말을 보내면 상대에게서 전화가 걸려옴 */
     callTriggers: {
       "변호사님❤️": [ { contains: true, match: ["형"], delay: 2500, call: {
-        from: "변호사님❤️", ringSeconds: 30, lineStart: 1100, hangUpAfter: 900,
+        from: "변호사님❤️", ringSeconds: 30, lineStart: 1100, hangUpAfter: 900, renameTo: "주한이 형❤️",   /* 통화가 끝나면 저장명이 전부 이 이름으로 바뀜 */
         lines: [
           { text: "이제 아주 내가 편해졌나 봐?" },
           { who: "me", text: "아니이… 저희 연애한 지가 몇 년인데. 변호사님은 너무 빡빡하잖아요." },
