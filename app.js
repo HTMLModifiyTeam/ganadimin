@@ -259,7 +259,7 @@
           const k = Math.min(lines.length, Math.ceil(pos / total * lines.length));
           tx.textContent = lines.slice(0, k).join(" ");
         };
-        playing = { row, t: setInterval(() => { if (!el.isConnected) { stop(); return; } pos++; draw(); if (pos >= total) { tx.textContent = lines.join(" "); setTimeout(stop, 300); } }, 1000) };
+        playing = { row, t: setInterval(() => { if (!el.isConnected) { stop(); return; } pos++; draw(); if (pos >= total) { tx.textContent = lines.join(" "); setTimeout(stop, 300); if (v.after) setTimeout(() => murmur(v.after), 1200); } }, 1000) };
         draw();
         if (v.new) { v.new = false; row.querySelector(".vm-dot").classList.add("off"); }
         return;
@@ -270,6 +270,13 @@
       if (!open) row.classList.add("open");
     });
     return el;
+  }
+  /* 화면 아래에 혼잣말이 천천히 떠올랐다 사라짐 */
+  function murmur(text) {
+    const dev = $("#device"); dev.querySelector(".murmur")?.remove();
+    const m = h(`<div class="murmur">${esc(text)}</div>`); dev.appendChild(m);
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add("show")));
+    setTimeout(() => { m.classList.remove("show"); setTimeout(() => m.remove(), 1600); }, 4200);
   }
   /* 키패드: 아무 숫자를 눌러도 정해진 번호(P.keypadNumber)가 한 자리씩 입력됨 */
   function keypadView() {
