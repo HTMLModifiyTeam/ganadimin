@@ -44,9 +44,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .statusbar.light{color:#fff}
 .statusbar svg{fill:currentColor}
 .sb-icons{display:flex;gap:6px;align-items:center}
-.battery{width:25px;height:12px;border:1.5px solid currentColor;border-radius:4px;opacity:.9;padding:1.5px;position:relative}
-.battery i{display:block;height:100%;width:72%;background:currentColor;border-radius:1.5px}
-.battery:after{content:"";position:absolute;right:-4px;top:3px;width:2px;height:4px;background:currentColor;border-radius:0 1px 1px 0}
 
 .homebar{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:220px;height:44px;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;touch-action:none}
 .homebar i{display:block;width:136px;height:5px;border-radius:3px;background:#111;transition:background .25s}
@@ -328,32 +325,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ck-card div+div{border-top:1px solid #38383a}
 .ck-card .dim{color:#8e8e93}
 
-/* 카메라 */
-.cam{background:#000;color:#fff}
-.cam-top{display:flex;justify-content:space-between;align-items:center;padding:56px 24px 10px;font-size:20px;flex:none}
-.cam-ic{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:16px}
-.cam-chev{opacity:.8}
-.cam-view{position:relative;width:100%;aspect-ratio:3/4;background:#111;overflow:hidden;flex:none}
-.cam-view video{width:100%;height:100%;object-fit:cover;display:block}
-.cam-view video.mirror{transform:scaleX(-1)}
-.cam-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8e8e93;font-size:15px;padding:20px;text-align:center}
-.cam-msg[hidden]{display:none}
-.cam-flash{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
-.cam-flash.go{animation:camflash .25s}
-@keyframes camflash{0%{opacity:1}100%{opacity:0}}
-.cam-zoom{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);color:#ffd60a;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
-.cam-modes{display:flex;justify-content:center;gap:18px;font-size:13px;font-weight:500;letter-spacing:.02em;padding:16px 0 6px;color:#fff;white-space:nowrap;flex:none}
-.cam-modes b{color:#ffd60a;font-weight:600}
-.cam-bottom{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 30px 30px}
-.cam-thumb{width:50px;height:50px;border-radius:8px;background:#222 center/cover;border:1.5px solid rgba(255,255,255,.25)}
-.cam-shutter{width:76px;height:76px;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center}
-.cam-shutter i{width:62px;height:62px;border-radius:50%;background:#fff;transition:transform .1s}
-.cam-shutter:active i{transform:scale(.9)}
-.cam-flip{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center}
-.cam-flip svg{width:26px;height:26px}
-
-.cam-msg{line-height:1.5}.cam-msg small{font-size:12px;color:#6e6e73}
-
 /* 캘린더 */
 .calapp{background:#fff}
 .calapp .navbar{padding-bottom:0}
@@ -633,31 +604,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .dock{background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 2px 12px rgba(0,0,0,.05)}
 .widget{background:rgba(255,255,255,.65);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 2px 12px rgba(0,0,0,.05)}
 
-/* 지뢰찾기 */
-.mines{background:#f2f2f7}
-.ms-bar{display:flex;justify-content:space-between;align-items:center;margin:4px 20px 6px;background:#fff;border-radius:18px;padding:10px 18px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.ms-bar div{display:flex;flex-direction:column;align-items:center;min-width:64px}
-.ms-bar small{font-size:11px;color:#8e8e93}
-.ms-bar b{font-size:22px;font-variant-numeric:tabular-nums}
-.ms-face{font-size:30px;width:52px;height:52px;border-radius:50%;background:#f2f2f7}
-.ms-best{text-align:center;font-size:13px;color:#636366;margin:4px 0 10px}
-.ms-best b{color:#111}
-.ms-board{display:grid;gap:3px;margin:0 14px;padding:6px;background:#c7ccd4;border-radius:14px;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.ms-c{aspect-ratio:1;border-radius:6px;background:linear-gradient(#fdfdfd,#e6e8ec);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);font-size:clamp(13px,4.2vw,19px);font-weight:800;display:flex;align-items:center;justify-content:center;-webkit-touch-callout:none}
-.ms-c.open{background:#eef0f3;box-shadow:none}
-.ms-c.boom{background:#ff6b6b}
-.ms-c.n1{color:#2563eb}.ms-c.n2{color:#16a34a}.ms-c.n3{color:#dc2626}.ms-c.n4{color:#7c3aed}.ms-c.n5{color:#b45309}.ms-c.n6{color:#0891b2}.ms-c.n7{color:#111}.ms-c.n8{color:#6b7280}
-.ms-c.flag{font-size:clamp(12px,3.8vw,17px)}
-.ms-tools{display:flex;gap:10px;justify-content:center;margin:14px 0 6px}
-.ms-mode{padding:9px 18px;border-radius:20px;background:#fff;font-size:15px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.ms-mode.on{background:#111;color:#fff}
-.ms-msg{text-align:center;font-size:16px;font-weight:600;min-height:24px;margin-top:4px}
-.ms-msg.win{color:#16a34a}.ms-msg.lose{color:#dc2626}
-.ms-c{background:linear-gradient(#e3e8f0,#c9d1dd);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(0,0,0,.12)}
-.ms-c.open{background:#fbfbfc;box-shadow:none}
-.ms-board{background:#aeb6c2}
-.ms-c.open.boom{background:#ff6b6b}
-
 .kk-row .nm .kpin{vertical-align:-1px;margin-left:5px}
 .kk-ad .kcoat{width:38px;height:46px;position:relative;background:#b5835a;clip-path:polygon(0 16%,32% 0,50% 30%,68% 0,100% 16%,100% 100%,0 100%);border-radius:3px}
 .kk-ad .kcoat:after{content:"";position:absolute;left:50%;top:30%;bottom:0;width:2px;margin-left:-1px;background:#8a5f3c}
@@ -678,30 +624,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .lk-btn{background:rgba(255,255,255,.25)}
 .lk-btn svg{color:#fff}
 .device.anim .lw-circ,.device.anim .lw-dday{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-
-/* ===== 블록 블래스트 ===== */
-.bb{background:linear-gradient(180deg,#3a3f8f 0%,#262a66 100%);color:#fff;user-select:none;-webkit-user-select:none}
-.bb .navbar .pill{background:rgba(255,255,255,.15);color:#fff}
-.bb .navbar .pill svg{stroke:#fff}
-.bb-top{display:flex;flex-direction:column;align-items:center;margin:4px 0 12px}
-.bb-best{font-size:15px;color:#ffd75e;font-weight:700}
-.bb-score{font-size:44px;font-weight:800;line-height:1.1;text-shadow:0 3px 0 rgba(0,0,0,.2)}
-.bb-board{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin:0 16px;padding:6px;background:#1b1e4b;border-radius:12px;box-shadow:inset 0 0 0 2px #14173a}
-.bb-board i{aspect-ratio:1;border-radius:5px;background:#252a62;transition:transform .2s,opacity .2s}
-.bb-board i.on{box-shadow:inset 0 4px 0 rgba(255,255,255,.3),inset 0 -4px 0 rgba(0,0,0,.18)}
-.bb-board i.hint{background:rgba(255,255,255,.35)!important}
-.bb-board i.pop{transform:scale(.2);opacity:0}
-.bb-tray{display:flex;justify-content:space-around;align-items:center;height:130px;margin:14px 8px 0;touch-action:none}
-.bb-slot{flex:1;height:100%;display:flex;align-items:center;justify-content:center}
-.bb-piece{position:relative;cursor:grab;transform:scale(.9)}
-.bb-piece.no{opacity:.35}
-.bb-piece i,.bb-float i{position:absolute;width:17px;height:17px;border-radius:4px;box-shadow:inset 0 3px 0 rgba(255,255,255,.3),inset 0 -3px 0 rgba(0,0,0,.18)}
-.bb-float{position:absolute;pointer-events:none;z-index:5}
-.bb-over{position:absolute;inset:0;background:rgba(15,17,45,.78);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:6}
-.bb-over[hidden]{display:none}
-.bb-over b{font-size:20px}
-.bb-over span{font-size:30px;font-weight:800}
-.bb-over button{margin-top:8px;padding:12px 30px;border-radius:24px;background:#ffc93c;color:#2a2f6e;font-weight:800;font-size:16px}
 
 /* ===== 인스타그램 ===== */
 .ig{background:#fff;color:#000}
@@ -823,32 +745,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ig-tab>.on svg{fill:#000;stroke-width:2}
 .ig-tab>.dot:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#ff3040;right:calc(50% - 16px);bottom:10px;box-shadow:0 0 0 2px #fff}
 .ig-tab .me-on .ig-av{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #000}
-
-/* 잠금화면 음악 재생 화면 */
-.lw-circ[data-music]{cursor:pointer}
-.lk-player{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;padding:calc(64px*var(--s)) 28px 30px;background:linear-gradient(180deg,rgba(60,52,70,.72),rgba(25,22,32,.9));backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);color:#fff;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1)}
-.lk-player.show{transform:none}
-.lp-grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.4);margin-bottom:22px}
-.lp-art{width:calc(260px*var(--s));aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,#f6c1d0,#c9a7e8 50%,#8fb8f0);box-shadow:0 18px 40px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center}
-.lp-art span{font-size:90px;opacity:.75}
-.lp-meta{width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:calc(28px*var(--s))}
-.lp-meta div{display:flex;flex-direction:column}
-.lp-meta b{font-size:21px}
-.lp-meta small{font-size:17px;opacity:.65;margin-top:2px}
-.lp-more{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);font-size:10px;display:flex;align-items:center;justify-content:center;letter-spacing:1px}
-.lp-bar{width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.25);margin-top:22px;overflow:hidden}
-.lp-bar i{display:block;height:100%;background:rgba(255,255,255,.85);transition:width .9s linear}
-.lp-times{width:100%;display:flex;justify-content:space-between;font-size:12px;opacity:.6;margin-top:6px;font-variant-numeric:tabular-nums}
-.lp-ctrl{display:flex;align-items:center;justify-content:space-around;width:100%;margin-top:calc(18px*var(--s))}
-.lp-ctrl button{font-size:30px;color:#fff;opacity:.9}
-.lp-ctrl .big svg{width:48px;height:48px;fill:#fff}
-.lp-vol{width:100%;display:flex;align-items:center;gap:10px;margin-top:calc(20px*var(--s));font-size:13px;opacity:.75}
-.lp-vol i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.25)}
-.lp-vol b{display:block;width:62%;height:100%;border-radius:3px;background:rgba(255,255,255,.85)}
-.lp-link{margin-top:calc(22px*var(--s));padding:10px 20px;border-radius:20px;background:rgba(255,255,255,.18);color:#fff;font-size:14px;font-weight:600;text-decoration:none}
-.lp-close{margin-top:auto;color:#fff;opacity:.7;font-size:15px}
-.ig-dmt-wrap{display:flex;align-items:center;gap:4px}
-.ig-viewprof{margin-top:10px;padding:7px 14px;border-radius:8px;background:#efefef;font-size:13.5px;font-weight:600}
 
 /* 키패드 (라이트) */
 .kp{display:flex;flex-direction:column}
